@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, TouchableOpacity, Text, SafeAreaView, Animated, ScrollView, Image, Dimensions } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Text, SafeAreaView, Animated, ScrollView, Image, Dimensions, ImageBackground } from 'react-native';
 import Slider from '@react-native-community/slider';
 import Svg, { Path, G, ClipPath, Defs } from 'react-native-svg';
 import { Audio } from 'expo-av';
@@ -291,6 +291,11 @@ export default function AnimalPaintingScreen({ onNavigate, onSave, initialAnimal
 
   return (
     <SafeAreaView style={styles.container}>
+      <ImageBackground 
+        source={require('./assets/backgraound.png')} 
+        style={styles.backgroundImage}
+        resizeMode={screenWidth >= 1024 ? "cover" : "stretch"}
+      >
       <TouchableOpacity style={styles.backButton} onPress={() => { playButtonSound(); onNavigate(); }}>
         <Text style={styles.backButtonText}>← Geri</Text>
       </TouchableOpacity>
@@ -509,6 +514,7 @@ export default function AnimalPaintingScreen({ onNavigate, onSave, initialAnimal
           </TouchableOpacity>
         </ScrollView>
       </Animated.View>
+      </ImageBackground>
     </SafeAreaView>
   );
 }
@@ -517,6 +523,11 @@ const styles = StyleSheet.create({
   container: { 
     flex: 1, 
     backgroundColor: '#f0f0f0' 
+  },
+  backgroundImage: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
   },
   backButton: {
     position: 'absolute',

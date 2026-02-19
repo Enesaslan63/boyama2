@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView, ScrollView, Image, Dimensions } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView, ScrollView, Image, Dimensions, ImageBackground } from 'react-native';
 import { Audio } from 'expo-av';
 
 const { width: screenWidth } = Dimensions.get('window');
@@ -41,43 +41,37 @@ export default function MagicEraserSelectionScreen({ onSelectImage, onNavigate, 
   const images = [
     { 
       id: 1, 
-      name: 'Resim 1', 
-      icon: '🎨',
       source: require('./sihirliSilgi/1.resim/1.webp')
     },
     { 
       id: 3, 
-      name: 'Resim 3', 
-      icon: '✨',
       source: require('./sihirliSilgi/1.resim/3.webp')
     },
     { 
       id: 5, 
-      name: 'Resim 5', 
-      icon: '🌟',
       source: require('./sihirliSilgi/1.resim/5.jpeg')
     },
     { 
       id: 7, 
-      name: 'Resim 7', 
-      icon: '🎭',
       source: require('./sihirliSilgi/1.resim/7.jpeg')
     },
     { 
       id: 9, 
-      name: 'Resim 9', 
-      icon: '🎪',
       source: require('./sihirliSilgi/1.resim/9.jpg')
     },
   ];
 
   return (
     <SafeAreaView style={styles.container}>
+      <ImageBackground 
+        source={require('./assets/backgraound.png')} 
+        style={styles.backgroundImage}
+        resizeMode={screenWidth >= 1024 ? "cover" : "stretch"}
+      >
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={() => { playButtonSound(); onNavigate(); }}>
           <Text style={styles.backButtonText}>← Geri</Text>
         </TouchableOpacity>
-        <Text style={styles.title}>🪄 Sihirli Silgi</Text>
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -96,14 +90,11 @@ export default function MagicEraserSelectionScreen({ onSelectImage, onNavigate, 
                   resizeMode="cover"
                 />
               </View>
-              <View style={styles.cardFooter}>
-                <Text style={styles.imageIcon}>{image.icon}</Text>
-                <Text style={styles.imageName}>{image.name}</Text>
-              </View>
             </TouchableOpacity>
           ))}
         </View>
       </ScrollView>
+      </ImageBackground>
     </SafeAreaView>
   );
 }
@@ -112,6 +103,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#2C3E50',
+  },
+  backgroundImage: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
   },
   header: {
     paddingTop: screenWidth >= 1024 ? 50 : 20,

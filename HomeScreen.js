@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView, StatusBar, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView, StatusBar, ScrollView, ImageBackground, Dimensions } from 'react-native';
 import { Audio } from 'expo-av';
 
 export default function HomeScreen({ onNavigateToFreeDraw, onNavigateToAnimalPainting, onNavigateToMagicEraser, onNavigateToMyPictures, isSoundEnabled, onToggleSound }) {
+  const { width: screenWidth } = Dimensions.get('window');
   const [buttonSound, setButtonSound] = useState(null);
 
   useEffect(() => {
@@ -47,6 +48,12 @@ export default function HomeScreen({ onNavigateToFreeDraw, onNavigateToAnimalPai
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" />
       
+      <ImageBackground 
+        source={require('./assets/backgraound.png')} 
+        style={styles.backgroundImage}
+        resizeMode={screenWidth >= 1024 ? "cover" : "stretch"}
+      >
+      
       {/* Yıldızlı arka plan */}
       <View style={styles.starsContainer}>
         {[...Array(20)].map((_, i) => (
@@ -65,18 +72,9 @@ export default function HomeScreen({ onNavigateToFreeDraw, onNavigateToAnimalPai
       </View>
 
       <ScrollView 
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[styles.scrollContent, { paddingTop: screenWidth >= 1024 ? 220 : 80 }]}
         showsVerticalScrollIndicator={false}
       >
-        {/* Logo ve Başlık */}
-        <View style={styles.header}>
-          <View style={styles.logoContainer}>
-            <Text style={styles.logoIcon}>🎨</Text>
-          </View>
-          <Text style={styles.title}>ART MASTER</Text>
-          <Text style={styles.subtitle}>CREATIVE STUDIO</Text>
-        </View>
-
         {/* Ses Açma/Kapatma Butonu */}
         <TouchableOpacity 
           style={styles.soundButton}
@@ -117,6 +115,7 @@ export default function HomeScreen({ onNavigateToFreeDraw, onNavigateToAnimalPai
         {/* Footer */}
         <Text style={styles.footer}>✨ Yaratıcılığın Keşfet ✨</Text>
       </ScrollView>
+      </ImageBackground>
     </SafeAreaView>
   );
 }
@@ -125,6 +124,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#2C3E50',
+  },
+  backgroundImage: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
   },
   scrollContent: {
     flexGrow: 1,

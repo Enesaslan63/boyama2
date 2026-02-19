@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView, ScrollView, ImageBackground } from 'react-native';
 import Svg, { Path, G } from 'react-native-svg';
 import { Audio } from 'expo-av';
 import { AslanSiyahCizgiler } from './hayvan/aslan';
@@ -77,6 +77,11 @@ export default function MyPicturesScreen({ onNavigate, pictures = [], onSelectPi
 
   return (
     <SafeAreaView style={styles.container}>
+      <ImageBackground 
+        source={require('./assets/backgraound.png')} 
+        style={styles.backgroundImage}
+        resizeMode={screenWidth >= 1024 ? "cover" : "stretch"}
+      >
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={() => { playButtonSound(); onNavigate(); }}>
           <Text style={styles.backButtonText}>← Geri</Text>
@@ -132,6 +137,7 @@ export default function MyPicturesScreen({ onNavigate, pictures = [], onSelectPi
           </View>
         )}
       </ScrollView>
+      </ImageBackground>
     </SafeAreaView>
   );
 }
@@ -140,6 +146,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#2C3E50',
+  },
+  backgroundImage: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
   },
   header: {
     paddingTop: 50,

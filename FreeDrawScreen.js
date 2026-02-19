@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, TouchableOpacity, Text, SafeAreaView, Animated, ScrollView, Dimensions } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Text, SafeAreaView, Animated, ScrollView, Dimensions, ImageBackground } from 'react-native';
 import Slider from '@react-native-community/slider';
 import Svg, { Path } from 'react-native-svg';
 import { Audio } from 'expo-av';
@@ -226,6 +226,11 @@ export default function FreeDrawScreen({ onNavigate, isSoundEnabled }) {
 
   return (
     <SafeAreaView style={styles.container}>
+      <ImageBackground 
+        source={require('./assets/backgraound.png')} 
+        style={styles.backgroundImage}
+        resizeMode={screenWidth >= 1024 ? "cover" : "stretch"}
+      >
       {/* Geri Butonu */}
       <TouchableOpacity style={styles.backButton} onPress={() => { playButtonSound(); onNavigate(); }}>
         <Text style={styles.backButtonText}>← Geri</Text>
@@ -413,6 +418,7 @@ export default function FreeDrawScreen({ onNavigate, isSoundEnabled }) {
           </TouchableOpacity>
         </ScrollView>
       </Animated.View>
+      </ImageBackground>
     </SafeAreaView>
   );
 }
@@ -421,6 +427,11 @@ const styles = StyleSheet.create({
   container: { 
     flex: 1, 
     backgroundColor: '#f0f0f0' 
+  },
+  backgroundImage: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
   },
   backButton: {
     position: 'absolute',

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView, ScrollView, Dimensions } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView, ScrollView, Dimensions, ImageBackground } from 'react-native';
 import Svg from 'react-native-svg';
 import { Audio } from 'expo-av';
 
@@ -58,38 +58,40 @@ export default function AnimalSelectionScreen({ onSelectAnimal, onNavigate, isSo
     }
   };
   const animals = [
-    { id: 'aslan', name: 'Aslan', icon: '🦁', color: '#FFB74D', Component: AslanSiyahCizgiler },
-    { id: 'kedi', name: 'Kedi', icon: '🐱', color: '#FF8A65', Component: KediSiyahCizgiler },
-    { id: 'kopek', name: 'Köpek', icon: '🐕', color: '#8D6E63', Component: KopekSiyahCizgiler },
-    { id: 'kus', name: 'Kuş', icon: '🐦', color: '#42A5F5', Component: KusSiyahCizgiler },
-    { id: 'kurt', name: 'Kurt', icon: '🐺', color: '#78909C', Component: KurtSiyahCizgiler },
-    { id: 'maymun', name: 'Maymun', icon: '🐵', color: '#A1887F', Component: MaymunSiyahCizgiler },
-    { id: 'fil', name: 'Fil', icon: '🐘', color: '#90A4AE', Component: FilSiyahCizgiler },
-    { id: 'inek', name: 'İnek', icon: '🐄', color: '#BCAAA4', Component: InekSiyahCizgiler },
-    { id: 'kartal', name: 'Kartal', icon: '🦅', color: '#795548', Component: KartalSiyahCizgiler },
-    { id: 'balik', name: 'Balık', icon: '🐟', color: '#4FC3F7', Component: BalikSiyahCizgiler },
-    { id: 'ayi', name: 'Ayı', icon: '🐻', color: '#8D6E63', Component: AyiSiyahCizgiler },
-    { id: 'balina', name: 'Balina', icon: '🐋', color: '#29B6F6', Component: BalinaSiyahCizgiler },
-    { id: 'tavsan', name: 'Tavşan', icon: '🐰', color: '#BCAAA4', Component: TavsanSiyahCizgiler },
-    { id: 'bibalik', name: 'Köpekbalığı', icon: '🦈', color: '#546E7A', Component: BibalikSiyahCizgiler },
-    { id: 'yildiz', name: 'Yıldız', icon: '⭐', color: '#FFD54F', Component: YildizSiyahCizgiler },
-    { id: 'timsah', name: 'Timsah', icon: '🐊', color: '#689F38', Component: TimsahSiyahCizgiler },
-    { id: 'zürafa', name: 'Zürafa', icon: '🦒', color: '#FFA726', Component: ZürafaSiyahCizgiler },
-    { id: 'penguen', name: 'Penguen', icon: '🐧', color: '#546E7A', Component: PenguenSiyahCizgiler },
+    { id: 'aslan', Component: AslanSiyahCizgiler },
+    { id: 'kedi', Component: KediSiyahCizgiler },
+    { id: 'kopek', Component: KopekSiyahCizgiler },
+    { id: 'kus', Component: KusSiyahCizgiler },
+    { id: 'kurt', Component: KurtSiyahCizgiler },
+    { id: 'maymun', Component: MaymunSiyahCizgiler },
+    { id: 'fil', Component: FilSiyahCizgiler },
+    { id: 'inek', Component: InekSiyahCizgiler },
+    { id: 'kartal', Component: KartalSiyahCizgiler },
+    { id: 'balik', Component: BalikSiyahCizgiler },
+    { id: 'ayi', Component: AyiSiyahCizgiler },
+    { id: 'balina', Component: BalinaSiyahCizgiler },
+    { id: 'tavsan', Component: TavsanSiyahCizgiler },
+    { id: 'bibalik', Component: BibalikSiyahCizgiler },
+    { id: 'yildiz', Component: YildizSiyahCizgiler },
+    { id: 'timsah', Component: TimsahSiyahCizgiler },
+    { id: 'zürafa', Component: ZürafaSiyahCizgiler },
+    { id: 'penguen', Component: PenguenSiyahCizgiler },
   ];
 
   return (
     <SafeAreaView style={styles.container}>
+      <ImageBackground 
+        source={require('./assets/backgraound.png')} 
+        style={styles.backgroundImage}
+        resizeMode={screenWidth >= 1024 ? "cover" : "stretch"}
+      >
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={() => { playButtonSound(); onNavigate(); }}>
           <Text style={styles.backButtonText}>← Geri</Text>
         </TouchableOpacity>
-        <Text style={styles.title}>Hayvan Seç</Text>
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.subtitle}>Boyamak istediğin hayvanı seç</Text>
-        
         <View style={styles.animalGrid}>
           {animals.map((animal) => (
             <TouchableOpacity
@@ -99,18 +101,15 @@ export default function AnimalSelectionScreen({ onSelectAnimal, onNavigate, isSo
               activeOpacity={0.8}
             >
               <View style={styles.imagePreview}>
-                <Svg width="100%" height="100%" viewBox="0 0 1024 1536" preserveAspectRatio="xMidYMid meet">
+                <Svg width="100%" height="100%" viewBox="150 50 624 936" preserveAspectRatio="xMidYMid meet">
                   <animal.Component />
                 </Svg>
-              </View>
-              <View style={styles.cardFooter}>
-                <Text style={styles.animalIcon}>{animal.icon}</Text>
-                <Text style={styles.animalName}>{animal.name}</Text>
               </View>
             </TouchableOpacity>
           ))}
         </View>
       </ScrollView>
+      </ImageBackground>
     </SafeAreaView>
   );
 }
@@ -119,6 +118,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#2C3E50',
+  },
+  backgroundImage: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
   },
   header: {
     paddingTop: screenWidth >= 1024 ? 50 : 20,
@@ -146,21 +150,19 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     paddingHorizontal: 8,
     paddingTop: 0,
     paddingBottom: 12,
-  },
-  subtitle: {
-    fontSize: 10,
-    color: 'rgba(255, 255, 255, 0.8)',
-    textAlign: 'center',
-    marginBottom: 12,
   },
   animalGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
+    alignItems: 'center',
     gap: 5,
+    maxWidth: '100%',
   },
   animalCard: {
     width: '25%',
@@ -177,6 +179,8 @@ const styles = StyleSheet.create({
     width: '100%',
     aspectRatio: 1,
     backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   cardFooter: {
     flexDirection: 'row',
