@@ -1,13 +1,13 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView, StatusBar, ScrollView } from 'react-native';
 
-export default function HomeScreen({ onNavigateToFreeDraw, onNavigateToAnimalPainting }) {
+export default function HomeScreen({ onNavigateToFreeDraw, onNavigateToAnimalPainting, onNavigateToMagicEraser }) {
   const categories = [
     { id: 1, title: 'Serbest Çizim', color: ['#FF9A9E', '#FAD0C4'], icon: '✏️', badge: 'Popüler', route: 'freeDraw' },
     { id: 3, title: 'Hayvan Boyama', color: ['#FF6B9D', '#C06C84'], icon: '🦁', badge: 'Yeni', route: 'animalPainting' },
     { id: 4, title: 'Eğlenceli Şekiller', color: ['#FFA751', '#FFE259'], icon: '✨' },
     { id: 5, title: 'Resimlerim', color: ['#4FACFE', '#00F2FE'], icon: '🖼️' },
-    { id: 6, title: 'Sihirli Silgi', color: ['#A18CD1', '#FBC2EB'], icon: '🪄', badge: 'Yeni' },
+    { id: 6, title: 'Sihirli Silgi', color: ['#A18CD1', '#FBC2EB'], icon: '🪄', badge: 'Yeni', route: 'magicEraser' },
   ];
 
   return (
@@ -53,6 +53,7 @@ export default function HomeScreen({ onNavigateToFreeDraw, onNavigateToAnimalPai
               onPress={() => {
                 if (category.route === 'freeDraw') onNavigateToFreeDraw();
                 else if (category.route === 'animalPainting') onNavigateToAnimalPainting();
+                else if (category.route === 'magicEraser') onNavigateToMagicEraser();
               }}
               activeOpacity={0.8}
             >

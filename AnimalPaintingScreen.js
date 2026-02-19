@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, TouchableOpacity, Text, SafeAreaView, Animated, ScrollView } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Text, SafeAreaView, Animated, ScrollView, Image } from 'react-native';
 import Slider from '@react-native-community/slider';
 import Svg, { Path, G, ClipPath, Defs } from 'react-native-svg';
 import { AslanSiyahCizgiler } from './hayvan/aslan';
@@ -85,6 +85,7 @@ export default function AnimalPaintingScreen({ onNavigate, initialAnimal = 'asla
   const [panelAnimation] = useState(new Animated.Value(0));
   const [isEraser, setIsEraser] = useState(false);
   const [selectedAnimal, setSelectedAnimal] = useState(initialAnimal);
+  const [isEraserHovered, setIsEraserHovered] = useState(false);
 
   const colors = [
     '#FF0000', '#FF1744', '#F50057', '#D500F9', 
