@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, TouchableOpacity, Text, SafeAreaView, Animated, ScrollView, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, TouchableOpacity, Text, SafeAreaView, Animated, ScrollView, Image, Dimensions } from 'react-native';
 import Slider from '@react-native-community/slider';
 import Svg, { Path, G, ClipPath, Defs } from 'react-native-svg';
+import { Audio } from 'expo-av';
+
+const { width: screenWidth } = Dimensions.get('window');
 import { AslanSiyahCizgiler } from './hayvan/aslan';
 import { KediSiyahCizgiler } from './hayvan/kedi';
 import { KopekSiyahCizgiler } from './hayvan/kopek';
@@ -78,7 +81,7 @@ const ZÜRAFA_GOVDE_YOLU = "M401 144.9c-11 3.5-20.5 11.2-25.3 20.3-5.5 10.5-5.8 
 // Penguen figürünün ana path'i - boyama için maske
 const PENGUEN_GOVDE_YOLU = "M496.5 182.7c-45.2 3.6-82.5 17.7-117.5 44.4-26.5 20.1-49.9 51.4-63.8 85.4-9.9 24-15.5 47-20.2 82.5-.6 4.6-1.7 10-2.4 12-2.7 7.8-12.9 23.3-44.7 67.7-22.1 30.9-31 44.6-39.9 61.8-2.9 5.5-5.6 10.4-6 11-.4.5-2.3 4.8-4.3 9.5-9 22.2-6.8 35.5 6.7 39.4 6.7 2 8.8 2 18.1.1 13.4-2.8 39.1-15.9 45.9-23.4 1.8-2 5.3-3 4.2-1.2-.3.4-1.3 7.7-2.2 16.2-4.2 39.7 3.8 74.1 24.3 104.7 12.2 18.2 30.2 34.2 54.8 48.7 4.4 2.6 9.1 5.1 10.4 5.6 2.3.9 2 1.2-3.9 4-23.3 11-32.2 31.7-18.7 43.6 4.3 3.8 12.6 5.8 20.5 5 4.1-.4 5.4-.2 5.9.9 1 2.6 8.7 6.3 15.4 7.3 7.1 1.2 13.9.4 20.5-2.4 3.4-1.4 4.1-1.4 8.3.2 3.1 1.2 7.4 1.8 13.2 1.8 7.8 0 9.1-.3 16.1-3.8 9.4-4.6 17.6-13.1 20.9-21.7l2.3-5.6 5 .7c23.9 3.6 70.7 3.6 93.4 0l5.2-.8 3 6.5c4.4 9.5 14.3 18.8 23.8 22.4 8.7 3.4 15.9 3.6 24.1.8 5.8-1.9 5.8-1.9 11.2.1 3.8 1.5 7.9 2.1 13.9 2.2 7.3.1 9.2-.3 13.7-2.6 2.8-1.5 5.8-3.5 6.5-4.4 1.1-1.5 2.9-1.8 10.3-1.8 11.2-.1 17.2-2.6 21.3-8.9 3.2-5.1 3.6-13.2.9-18.8-3.2-6.4-12.6-15-21.3-19.4l-8-4.1 7.5-3.9c32.7-17.1 59.3-43.7 71.9-71.9 12.7-28.5 16.3-61.7 10.6-97.8l-.6-3.9 10.5 7.1c12.6 8.5 29.2 16.2 40 18.6 17.5 3.9 28.5-1.9 29.5-15.5.5-6.9-3.2-20.7-8.5-32-6.6-13.7-21.2-38-35.8-59.1-6.1-8.9-21.1-30.3-24.7-35.3-6.4-8.9-28.4-42-30.1-45.2-.9-1.6-2.1-7.7-2.7-13.5-6.8-63.2-23.7-105.6-57.3-143.7-23.5-26.7-51.6-45.4-87.3-58-26.5-9.5-61-13.9-89.9-11.5zm49.5 10.8c43.7 6.6 84.8 27.4 114.4 57.8 7.1 7.3 20.3 23.8 25.3 31.5 16.6 25.9 29.5 62.9 33.7 97.2 3.8 30.4 3.6 29.8 12.3 43.4 2.5 3.9 5.5 8.7 6.6 10.6 1 1.9 3.2 5.3 4.8 7.5 7.6 10.2 30.7 43.4 47.1 67.5 22.8 33.5 36.2 64.1 32.8 74.5-2.1 6.3-11.1 7-25.4 1.8-11.8-4.2-29.9-14.4-33.6-18.8-.7-.9-2.5-2.2-3.9-3-1.4-.7-5.1-3.9-8.1-7-6.9-7-8.4-7.9-11-6.5-2.5 1.3-2.5 3.2-.1 12.3 4.2 15.7 5.5 26.6 5.5 45.2 0 15.8-.3 19.7-2.8 31.5-4.6 22.3-12.7 39.9-26.4 57-8 10.1-13.6 15.2-27.2 25.4-13.1 9.8-40.5 24-57.8 30-55.5 19.2-120.6 24.2-184.2 14-39.1-6.2-78.2-20.7-105.8-39.1-29-19.4-50.3-48.5-58.4-79.7-6.1-23.5-6.4-50.8-.9-77.9 1.8-8.7 3-16.4 2.7-17.2-.3-.8-1.7-1.5-3.1-1.5-1.9 0-4.1 1.7-8.3 6.1-6.5 7-22.2 18.3-33.2 23.8-15.9 8.1-30.3 10.7-36.3 6.8-2.4-1.6-2.7-2.3-2.7-7.5 0-10.7 10-34.2 23-53.7 1.4-2.2 4.5-7.2 6.8-11 4.7-7.7 8.2-12.8 22.9-33.2 28.5-39.6 37.5-53 43.8-65.4 3.4-6.7 3.6-7.7 8.1-35.9 2.1-13.3 5.8-30.1 9.1-41 5.6-18.6 17.4-44.5 25.6-56.3 2.3-3.3 6.2-9 8.7-12.6 10.3-15.2 35.6-38 54.5-49.3 26.8-16 58.9-26.2 91.5-29.2 8.9-.8 39.7.4 50 1.9zM381.5 756.6c13.4 5.9 43.8 14.4 60.5 16.9 7.7 1.1 7.9 1.3 7 4.4-2.1 7.3-10.4 15.7-19 19.2-1.9.8-6.4 1.4-10 1.4-6.2-.1-8.8-.9-14.2-4.7-1.4-1-2.8-.7-7.5 1.6-11.7 5.8-24.8 4.3-27.9-3-1.6-3.7-4.4-5-7.4-3.4-1.2.6-4.9 1.2-8.3 1.3-15.4.3-19.1-9.6-8-21.4 6-6.4 9.7-8.6 20.2-12 4.7-1.5 8.7-2.8 8.7-2.8.1-.1 2.8 1.1 5.9 2.5zm276.7.3c10.9 3.7 12.2 4.4 18.6 10.5 6.3 5.9 8.2 9.2 8.2 14.1 0 8-10.9 11.6-22.3 7.3-3.6-1.4-7.4.2-7.9 3.4-.5 3.6-7.8 6.8-15.4 6.8-4.8 0-7.4-.6-12-3-3.2-1.6-6.4-3-7.1-3-.7 0-2.8 1.1-4.8 2.4-12.3 8.4-33.1-.3-40-16.7l-1.4-3.4 11.7-2.2c15.9-3 28.4-6.3 42.7-11 9.3-3.1 20.4-7.3 21.1-8 0-.1 3.9 1.2 8.6 2.8z";
 
-export default function AnimalPaintingScreen({ onNavigate, onSave, initialAnimal = 'aslan' }) {
+export default function AnimalPaintingScreen({ onNavigate, onSave, initialAnimal = 'aslan', isSoundEnabled }) {
   const [paths, setPaths] = useState([]);
   const [currentPath, setCurrentPath] = useState([]);
   const [color, setColor] = useState('#FF0000');
@@ -90,6 +93,72 @@ export default function AnimalPaintingScreen({ onNavigate, onSave, initialAnimal
   const [isEraser, setIsEraser] = useState(false);
   const [selectedAnimal, setSelectedAnimal] = useState(initialAnimal);
   const [isEraserHovered, setIsEraserHovered] = useState(false);
+  const [buttonSound, setButtonSound] = useState(null);
+  const [paintSound, setPaintSound] = useState(null);
+
+  useEffect(() => {
+    // Ses dosyasını yükle
+    const loadSound = async () => {
+      try {
+        const { sound } = await Audio.Sound.createAsync(
+          require('./assets/ses/button.mp3')
+        );
+        setButtonSound(sound);
+
+        const { sound: paintSnd } = await Audio.Sound.createAsync(
+          require('./assets/ses/boyama.mp3')
+        );
+        setPaintSound(paintSnd);
+      } catch (error) {
+        console.log('Ses yükleme hatası:', error);
+      }
+    };
+    
+    loadSound();
+    
+    // Cleanup
+    return () => {
+      if (buttonSound) {
+        buttonSound.unloadAsync();
+      }
+      if (paintSound) {
+        paintSound.unloadAsync();
+      }
+    };
+  }, []);
+
+  const playButtonSound = async () => {
+    if (!isSoundEnabled) return;
+    try {
+      if (buttonSound) {
+        await buttonSound.replayAsync();
+      }
+    } catch (error) {
+      console.log('Ses çalma hatası:', error);
+    }
+  };
+
+  const playPaintSound = async () => {
+    if (!isSoundEnabled) return;
+    try {
+      if (paintSound) {
+        await paintSound.setIsLoopingAsync(true);
+        await paintSound.playAsync();
+      }
+    } catch (error) {
+      console.log('Ses çalma hatası:', error);
+    }
+  };
+
+  const stopPaintSound = async () => {
+    try {
+      if (paintSound) {
+        await paintSound.stopAsync();
+      }
+    } catch (error) {
+      console.log('Ses durdurma hatası:', error);
+    }
+  };
 
   const colors = [
     '#FF0000', '#FF1744', '#F50057', '#D500F9', 
@@ -103,6 +172,7 @@ export default function AnimalPaintingScreen({ onNavigate, onSave, initialAnimal
   ];
 
   const togglePanel = () => {
+    playButtonSound();
     const toValue = isPanelOpen ? 0 : 1;
     Animated.spring(panelAnimation, {
       toValue,
@@ -119,16 +189,19 @@ export default function AnimalPaintingScreen({ onNavigate, onSave, initialAnimal
   });
 
   const undoLastPath = () => {
+    playButtonSound();
     if (paths.length > 0) {
       setPaths(paths.slice(0, -1));
     }
   };
 
   const clearAll = () => {
+    playButtonSound();
     setPaths([]);
   };
 
   const toggleEraser = () => {
+    playButtonSound();
     setIsEraser(!isEraser);
   };
 
@@ -160,6 +233,7 @@ export default function AnimalPaintingScreen({ onNavigate, onSave, initialAnimal
   const handleTouchStart = (event) => {
     const { locationX, locationY } = event.nativeEvent;
     const svgCoords = convertToSVGCoords(locationX, locationY);
+    playPaintSound();
     setIsDrawing(true);
     setCurrentPath([svgCoords]);
   };
@@ -183,6 +257,7 @@ export default function AnimalPaintingScreen({ onNavigate, onSave, initialAnimal
   };
 
   const handleTouchEnd = () => {
+    stopPaintSound();
     if (currentPath.length > 1) {
       const pathString = smoothPath(currentPath);
       setPaths(prev => [...prev, { d: pathString, color: isEraser ? '#FFFFFF' : color, strokeWidth }]);
@@ -216,7 +291,7 @@ export default function AnimalPaintingScreen({ onNavigate, onSave, initialAnimal
 
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity style={styles.backButton} onPress={onNavigate}>
+      <TouchableOpacity style={styles.backButton} onPress={() => { playButtonSound(); onNavigate(); }}>
         <Text style={styles.backButtonText}>← Geri</Text>
       </TouchableOpacity>
 
@@ -374,6 +449,7 @@ export default function AnimalPaintingScreen({ onNavigate, onSave, initialAnimal
                   c === '#FFFFFF' && styles.whiteColor
                 ]} 
                 onPress={() => {
+                  playButtonSound();
                   setColor(c);
                   setIsEraser(false);
                 }} 
@@ -411,6 +487,7 @@ export default function AnimalPaintingScreen({ onNavigate, onSave, initialAnimal
           <TouchableOpacity 
             style={[styles.toolButton, styles.saveButton, paths.length === 0 && styles.toolButtonDisabled]} 
             onPress={() => {
+              playButtonSound();
               if (paths.length === 0) {
                 alert('Önce boyama yapmalısın!');
                 return;
@@ -443,25 +520,27 @@ const styles = StyleSheet.create({
   },
   backButton: {
     position: 'absolute',
-    top: 50,
-    left: 20,
+    top: screenWidth >= 1024 ? 50 : 10,
+    left: screenWidth >= 1024 ? 20 : 10,
     zIndex: 10,
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 20,
+    paddingHorizontal: screenWidth >= 1024 ? 20 : 12,
+    paddingVertical: screenWidth >= 1024 ? 10 : 6,
+    borderRadius: screenWidth >= 1024 ? 20 : 15,
     elevation: 3,
   },
   backButtonText: {
-    fontSize: 16,
+    fontSize: screenWidth >= 1024 ? 16 : 12,
     fontWeight: 'bold',
     color: '#333',
   },
   canvasArea: { 
     flex: 1,
     backgroundColor: 'white', 
-    margin: 15,
-    marginTop: 100,
+    marginLeft: screenWidth >= 1024 ? 100 : 150,
+    marginRight: screenWidth >= 1024 ? 100 : 150,
+    marginTop: screenWidth >= 1024 ? 100 : 10,
+    marginBottom: screenWidth >= 1024 ? 100 : 40,
     borderRadius: 20,
     elevation: 4,
     shadowColor: '#000',

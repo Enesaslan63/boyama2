@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView } from 'react-native';
 import Svg, { Path, G, ClipPath, Defs } from 'react-native-svg';
+import { Audio } from 'expo-av';
 import { AslanSiyahCizgiler } from './hayvan/aslan';
 import { KediSiyahCizgiler } from './hayvan/kedi';
 import { KopekSiyahCizgiler } from './hayvan/kopek';
@@ -42,12 +43,45 @@ const animalComponents = {
   zürafa: ZürafaSiyahCizgiler,
 };
 
-export default function PictureDetailScreen({ picture, onNavigate }) {
+export default function PictureDetailScreen({ picture, onNavigate, isSoundEnabled }) {
   const AnimalComponent = animalComponents[picture.animal];
+  const [buttonSound, setButtonSound] = useState(null);
+
+  useEffect(() => {
+    const loadSound = async () => {
+      try {
+        const { sound } = await Audio.Sound.createAsync(
+          require('./assets/ses/button.mp3')
+        );
+        setButtonSound(sound);
+      } catch (error) {
+        console.log('Ses yükleme hatası:', error);
+      }
+    };
+    
+    loadSound();
+    
+    return () => {
+      if (buttonSound) {
+        buttonSound.unloadAsync();
+      }
+    };
+  }, []);
+
+  const playButtonSound = async () => {
+    if (!isSoundEnabled) return;
+    try {
+      if (buttonSound) {
+        await buttonSound.replayAsync();
+      }
+    } catch (error) {
+      console.log('Ses çalma hatası:', error);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity style={styles.backButton} onPress={onNavigate}>
+      <TouchableOpacity style={styles.backButton} onPress={() => { playButtonSound(); onNavigate(); }}>
         <Text style={styles.backButtonText}>← Geri</Text>
       </TouchableOpacity>
 

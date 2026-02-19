@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, TouchableOpacity, Text, SafeAreaView, Animated, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, TouchableOpacity, Text, SafeAreaView, Animated, ScrollView, Dimensions } from 'react-native';
 import Slider from '@react-native-community/slider';
 import Svg, { Path } from 'react-native-svg';
+import { Audio } from 'expo-av';
+
+const { width: screenWidth } = Dimensions.get('window');
 
 const SVG_VIEW_WIDTH = 1024;
 const SVG_VIEW_HEIGHT = 1536;
 
-export default function FreeDrawScreen({ onNavigate }) {
+export default function FreeDrawScreen({ onNavigate, isSoundEnabled }) {
   const [paths, setPaths] = useState([]);
   const [currentPath, setCurrentPath] = useState([]);
   const [color, setColor] = useState('#FF0000');
@@ -16,6 +19,76 @@ export default function FreeDrawScreen({ onNavigate }) {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [panelAnimation] = useState(new Animated.Value(0));
   const [isEraser, setIsEraser] = useState(false);
+  const [buttonSound, setButtonSound] = useState(null);
+  const [paintSound, setPaintSound] = useState(null);
+
+  // Debug: Ekran boyutunu konsola yazdır
+  useEffect(() => {
+    console.log('Ekran genişliği:', screenWidth);
+    console.log('Büyük tablet mi?', screenWidth >= 1024);
+  }, []);
+
+  useEffect(() => {
+    const loadSound = async () => {
+      try {
+        const { sound } = await Audio.Sound.createAsync(
+          require('./assets/ses/button.mp3')
+        );
+        setButtonSound(sound);
+
+        const { sound: paintSnd } = await Audio.Sound.createAsync(
+          require('./assets/ses/boyama.mp3')
+        );
+        setPaintSound(paintSnd);
+      } catch (error) {
+        console.log('Ses yükleme hatası:', error);
+      }
+    };
+    
+    loadSound();
+    
+    return () => {
+      if (buttonSound) {
+        buttonSound.unloadAsync();
+      }
+      if (paintSound) {
+        paintSound.unloadAsync();
+      }
+    };
+  }, []);
+
+  const playButtonSound = async () => {
+    if (!isSoundEnabled) return;
+    try {
+      if (buttonSound) {
+        await buttonSound.replayAsync();
+      }
+    } catch (error) {
+      console.log('Ses çalma hatası:', error);
+    }
+  };
+
+  const playPaintSound = async () => {
+    if (!isSoundEnabled) return;
+    try {
+      if (paintSound) {
+        await paintSound.setIsLoopingAsync(true);
+        await paintSound.playAsync();
+      }
+    } catch (error) {
+      console.log('Ses çalma hatası:', error);
+    }
+  };
+
+  const stopPaintSound = async () => {
+    try {
+      if (paintSound) {
+        await paintSound.stopAsync();
+      }
+    } catch (error) {
+      console.log('Ses durdurma hatası:', error);
+    }
+  };
 
   const colors = [
     '#FF0000', '#FF1744', '#F50057', '#D500F9', 
@@ -29,6 +102,7 @@ export default function FreeDrawScreen({ onNavigate }) {
   ];
 
   const togglePanel = () => {
+    playButtonSound();
     const toValue = isPanelOpen ? 0 : 1;
     Animated.spring(panelAnimation, {
       toValue,
@@ -45,16 +119,19 @@ export default function FreeDrawScreen({ onNavigate }) {
   });
 
   const undoLastPath = () => {
+    playButtonSound();
     if (paths.length > 0) {
       setPaths(paths.slice(0, -1));
     }
   };
 
   const clearAll = () => {
+    playButtonSound();
     setPaths([]);
   };
 
   const toggleEraser = () => {
+    playButtonSound();
     setIsEraser(!isEraser);
   };
 
@@ -86,6 +163,7 @@ export default function FreeDrawScreen({ onNavigate }) {
   const handleTouchStart = (event) => {
     const { locationX, locationY } = event.nativeEvent;
     const svgCoords = convertToSVGCoords(locationX, locationY);
+    playPaintSound();
     setIsDrawing(true);
     setCurrentPath([svgCoords]);
   };
@@ -111,6 +189,7 @@ export default function FreeDrawScreen({ onNavigate }) {
   };
 
   const handleTouchEnd = () => {
+    stopPaintSound();
     if (currentPath.length > 1) {
       // Bezier curve kullanarak daha pürüzsüz çizgiler
       const pathString = smoothPath(currentPath);
@@ -148,7 +227,7 @@ export default function FreeDrawScreen({ onNavigate }) {
   return (
     <SafeAreaView style={styles.container}>
       {/* Geri Butonu */}
-      <TouchableOpacity style={styles.backButton} onPress={onNavigate}>
+      <TouchableOpacity style={styles.backButton} onPress={() => { playButtonSound(); onNavigate(); }}>
         <Text style={styles.backButtonText}>← Geri</Text>
       </TouchableOpacity>
 
@@ -267,6 +346,7 @@ export default function FreeDrawScreen({ onNavigate }) {
                   c === '#FFFFFF' && styles.whiteColor
                 ]} 
                 onPress={() => {
+                  playButtonSound();
                   setColor(c);
                   setIsEraser(false);
                 }} 
@@ -308,7 +388,7 @@ export default function FreeDrawScreen({ onNavigate }) {
           {/* Paylaş */}
           <TouchableOpacity 
             style={[styles.toolButton, styles.shareButton]} 
-            onPress={() => alert('Resim paylaşılıyor...')}
+            onPress={() => { playButtonSound(); alert('Resim paylaşılıyor...'); }}
           >
             <Text style={styles.toolIcon}>📤</Text>
             <Text style={styles.toolText}>Paylaş</Text>
@@ -317,7 +397,7 @@ export default function FreeDrawScreen({ onNavigate }) {
           {/* Kaydet */}
           <TouchableOpacity 
             style={[styles.toolButton, styles.saveButton]} 
-            onPress={() => alert('Resim kaydedildi!')}
+            onPress={() => { playButtonSound(); alert('Resim kaydedildi!'); }}
           >
             <Text style={styles.toolIcon}>💾</Text>
             <Text style={styles.toolText}>Kaydet</Text>
@@ -326,7 +406,7 @@ export default function FreeDrawScreen({ onNavigate }) {
           {/* Yazdır */}
           <TouchableOpacity 
             style={[styles.toolButton, styles.printButton]} 
-            onPress={() => alert('Yazdırma hazırlanıyor...')}
+            onPress={() => { playButtonSound(); alert('Yazdırma hazırlanıyor...'); }}
           >
             <Text style={styles.toolIcon}>🖨️</Text>
             <Text style={styles.toolText}>Yazdır</Text>
@@ -344,25 +424,27 @@ const styles = StyleSheet.create({
   },
   backButton: {
     position: 'absolute',
-    top: 50,
-    left: 20,
+    top: screenWidth >= 1024 ? 50 : 10,
+    left: screenWidth >= 1024 ? 20 : 10,
     zIndex: 10,
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 20,
+    paddingHorizontal: screenWidth >= 1024 ? 20 : 12,
+    paddingVertical: screenWidth >= 1024 ? 10 : 6,
+    borderRadius: screenWidth >= 1024 ? 20 : 15,
     elevation: 3,
   },
   backButtonText: {
-    fontSize: 16,
+    fontSize: screenWidth >= 1024 ? 16 : 12,
     fontWeight: 'bold',
     color: '#333',
   },
   canvasArea: { 
     flex: 1, 
     backgroundColor: 'white', 
-    margin: 15, 
-    marginTop: 100,
+    marginLeft: screenWidth >= 1024 ? 100 : 150,
+    marginRight: screenWidth >= 1024 ? 100 : 150,
+    marginTop: screenWidth >= 1024 ? 100 : 10,
+    marginBottom: screenWidth >= 1024 ? 100 : 40,
     borderRadius: 20,
     elevation: 4,
     shadowColor: '#000',

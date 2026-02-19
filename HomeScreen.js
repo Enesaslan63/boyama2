@@ -1,7 +1,41 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView, StatusBar, ScrollView } from 'react-native';
+import { Audio } from 'expo-av';
 
-export default function HomeScreen({ onNavigateToFreeDraw, onNavigateToAnimalPainting, onNavigateToMagicEraser, onNavigateToMyPictures }) {
+export default function HomeScreen({ onNavigateToFreeDraw, onNavigateToAnimalPainting, onNavigateToMagicEraser, onNavigateToMyPictures, isSoundEnabled, onToggleSound }) {
+  const [buttonSound, setButtonSound] = useState(null);
+
+  useEffect(() => {
+    const loadSound = async () => {
+      try {
+        const { sound } = await Audio.Sound.createAsync(
+          require('./assets/ses/button.mp3')
+        );
+        setButtonSound(sound);
+      } catch (error) {
+        console.log('Ses yükleme hatası:', error);
+      }
+    };
+    
+    loadSound();
+    
+    return () => {
+      if (buttonSound) {
+        buttonSound.unloadAsync();
+      }
+    };
+  }, []);
+
+  const playButtonSound = async () => {
+    if (!isSoundEnabled) return;
+    try {
+      if (buttonSound) {
+        await buttonSound.replayAsync();
+      }
+    } catch (error) {
+      console.log('Ses çalma hatası:', error);
+    }
+  };
   const categories = [
     { id: 1, title: 'Serbest Çizim', color: ['#FF9A9E', '#FAD0C4'], icon: '✏️', badge: 'Popüler', route: 'freeDraw' },
     { id: 3, title: 'Hayvan Boyama', color: ['#FF6B9D', '#C06C84'], icon: '🦁', badge: 'Yeni', route: 'animalPainting' },
@@ -43,6 +77,15 @@ export default function HomeScreen({ onNavigateToFreeDraw, onNavigateToAnimalPai
           <Text style={styles.subtitle}>CREATIVE STUDIO</Text>
         </View>
 
+        {/* Ses Açma/Kapatma Butonu */}
+        <TouchableOpacity 
+          style={styles.soundButton}
+          onPress={onToggleSound}
+          activeOpacity={0.7}
+        >
+          <Text style={styles.soundIcon}>{isSoundEnabled ? '🔊' : '🔇'}</Text>
+        </TouchableOpacity>
+
         {/* Kategoriler Grid */}
         <View style={styles.gridContainer}>
           {categories.map((category) => (
@@ -50,6 +93,7 @@ export default function HomeScreen({ onNavigateToFreeDraw, onNavigateToAnimalPai
               key={category.id}
               style={[styles.cardWrapper, { backgroundColor: category.color[0] }]}
               onPress={() => {
+                playButtonSound();
                 if (category.route === 'freeDraw') onNavigateToFreeDraw();
                 else if (category.route === 'animalPainting') onNavigateToAnimalPainting();
                 else if (category.route === 'magicEraser') onNavigateToMagicEraser();
@@ -100,52 +144,52 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    marginTop: 8,
+    marginTop: 40,
     marginBottom: 20,
   },
   logoContainer: {
-    width: 35,
-    height: 35,
-    borderRadius: 17.5,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 6,
+    marginBottom: 4,
     borderWidth: 2,
     borderColor: 'rgba(255, 255, 255, 0.3)',
   },
   logoIcon: {
-    fontSize: 18,
+    fontSize: 14,
   },
   title: {
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: 'bold',
     color: 'white',
-    letterSpacing: 1.5,
+    letterSpacing: 1.2,
   },
   subtitle: {
-    fontSize: 7,
+    fontSize: 6,
     color: 'rgba(255, 255, 255, 0.7)',
-    letterSpacing: 1.5,
-    marginTop: 2,
+    letterSpacing: 1.2,
+    marginTop: 1,
   },
   gridContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    paddingHorizontal: 8,
-    gap: 10,
+    paddingHorizontal: 6,
+    gap: 8,
   },
   cardWrapper: {
-    width: '15%',
+    width: '13%',
     aspectRatio: 0.7,
-    marginBottom: 5,
-    borderRadius: 20,
+    marginBottom: 4,
+    borderRadius: 16,
     overflow: 'hidden',
   },
   card: {
     flex: 1,
-    padding: 3,
+    padding: 2,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -156,19 +200,19 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
     paddingHorizontal: 2,
     paddingVertical: 0.5,
-    borderRadius: 3,
+    borderRadius: 2,
   },
   badgeText: {
-    fontSize: 5,
+    fontSize: 4,
     fontWeight: 'bold',
     color: '#333',
   },
   cardIcon: {
-    fontSize: 16,
+    fontSize: 12,
     marginBottom: 1,
   },
   cardTitle: {
-    fontSize: 6,
+    fontSize: 5,
     fontWeight: 'bold',
     color: 'white',
     textAlign: 'center',
@@ -179,8 +223,24 @@ const styles = StyleSheet.create({
   footer: {
     textAlign: 'center',
     color: 'rgba(255, 255, 255, 0.6)',
-    fontSize: 9,
-    marginTop: 10,
-    marginBottom: 10,
+    fontSize: 7,
+    marginTop: 8,
+    marginBottom: 8,
+  },
+  soundButton: {
+    position: 'absolute',
+    top: 50,
+    right: 25,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+  },
+  soundIcon: {
+    fontSize: 16,
   },
 });

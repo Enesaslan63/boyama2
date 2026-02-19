@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
 import Svg, { Path, G } from 'react-native-svg';
+import { Audio } from 'expo-av';
 import { AslanSiyahCizgiler } from './hayvan/aslan';
 import { KediSiyahCizgiler } from './hayvan/kedi';
 import { KopekSiyahCizgiler } from './hayvan/kopek';
@@ -39,11 +40,45 @@ const animalComponents = {
   zürafa: ZürafaSiyahCizgiler,
 };
 
-export default function MyPicturesScreen({ onNavigate, pictures = [], onSelectPicture }) {
+export default function MyPicturesScreen({ onNavigate, pictures = [], onSelectPicture, isSoundEnabled }) {
+  const [buttonSound, setButtonSound] = useState(null);
+
+  useEffect(() => {
+    const loadSound = async () => {
+      try {
+        const { sound } = await Audio.Sound.createAsync(
+          require('./assets/ses/button.mp3')
+        );
+        setButtonSound(sound);
+      } catch (error) {
+        console.log('Ses yükleme hatası:', error);
+      }
+    };
+    
+    loadSound();
+    
+    return () => {
+      if (buttonSound) {
+        buttonSound.unloadAsync();
+      }
+    };
+  }, []);
+
+  const playButtonSound = async () => {
+    if (!isSoundEnabled) return;
+    try {
+      if (buttonSound) {
+        await buttonSound.replayAsync();
+      }
+    } catch (error) {
+      console.log('Ses çalma hatası:', error);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={onNavigate}>
+        <TouchableOpacity style={styles.backButton} onPress={() => { playButtonSound(); onNavigate(); }}>
           <Text style={styles.backButtonText}>← Geri</Text>
         </TouchableOpacity>
         <Text style={styles.title}>🖼️ Resimlerim ({pictures.length})</Text>
@@ -64,7 +99,7 @@ export default function MyPicturesScreen({ onNavigate, pictures = [], onSelectPi
                 <TouchableOpacity 
                   key={picture.id} 
                   style={styles.pictureCard}
-                  onPress={() => onSelectPicture(picture)}
+                  onPress={() => { playButtonSound(); onSelectPicture(picture); }}
                   activeOpacity={0.7}
                 >
                   <View style={styles.picturePreview}>
@@ -107,7 +142,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#2C3E50',
   },
   header: {
-    paddingTop: 8,
+    paddingTop: 50,
     paddingHorizontal: 8,
     paddingBottom: 8,
   },

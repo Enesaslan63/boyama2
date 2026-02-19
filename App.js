@@ -14,6 +14,7 @@ export default function App() {
   const [selectedMagicImage, setSelectedMagicImage] = useState(1);
   const [savedPictures, setSavedPictures] = useState([]);
   const [selectedPicture, setSelectedPicture] = useState(null);
+  const [isSoundEnabled, setIsSoundEnabled] = useState(true);
 
   if (currentScreen === 'home') {
     return (
@@ -22,6 +23,8 @@ export default function App() {
         onNavigateToAnimalPainting={() => setCurrentScreen('animalSelection')}
         onNavigateToMagicEraser={() => setCurrentScreen('magicEraserSelection')}
         onNavigateToMyPictures={() => setCurrentScreen('myPictures')}
+        isSoundEnabled={isSoundEnabled}
+        onToggleSound={() => setIsSoundEnabled(!isSoundEnabled)}
       />
     );
   }
@@ -34,6 +37,7 @@ export default function App() {
           setCurrentScreen('animalPainting');
         }}
         onNavigate={() => setCurrentScreen('home')}
+        isSoundEnabled={isSoundEnabled}
       />
     );
   }
@@ -47,6 +51,7 @@ export default function App() {
           setSavedPictures(prev => [...prev, pictureData]);
           setCurrentScreen('myPictures');
         }}
+        isSoundEnabled={isSoundEnabled}
       />
     );
   }
@@ -59,6 +64,7 @@ export default function App() {
           setCurrentScreen('magicEraser');
         }}
         onNavigate={() => setCurrentScreen('home')}
+        isSoundEnabled={isSoundEnabled}
       />
     );
   }
@@ -67,7 +73,8 @@ export default function App() {
     return (
       <MagicEraserScreen 
         imageId={selectedMagicImage}
-        onNavigate={() => setCurrentScreen('magicEraserSelection')} 
+        onNavigate={() => setCurrentScreen('magicEraserSelection')}
+        isSoundEnabled={isSoundEnabled}
       />
     );
   }
@@ -81,6 +88,7 @@ export default function App() {
           setSelectedPicture(picture);
           setCurrentScreen('pictureDetail');
         }}
+        isSoundEnabled={isSoundEnabled}
       />
     );
   }
@@ -90,9 +98,10 @@ export default function App() {
       <PictureDetailScreen 
         picture={selectedPicture}
         onNavigate={() => setCurrentScreen('myPictures')}
+        isSoundEnabled={isSoundEnabled}
       />
     );
   }
 
-  return <FreeDrawScreen onNavigate={() => setCurrentScreen('home')} />;
+  return <FreeDrawScreen onNavigate={() => setCurrentScreen('home')} isSoundEnabled={isSoundEnabled} />;
 }

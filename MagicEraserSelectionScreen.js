@@ -1,7 +1,43 @@
-import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView, ScrollView, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView, ScrollView, Image, Dimensions } from 'react-native';
+import { Audio } from 'expo-av';
 
-export default function MagicEraserSelectionScreen({ onSelectImage, onNavigate }) {
+const { width: screenWidth } = Dimensions.get('window');
+
+export default function MagicEraserSelectionScreen({ onSelectImage, onNavigate, isSoundEnabled }) {
+  const [buttonSound, setButtonSound] = useState(null);
+
+  useEffect(() => {
+    const loadSound = async () => {
+      try {
+        const { sound } = await Audio.Sound.createAsync(
+          require('./assets/ses/button.mp3')
+        );
+        setButtonSound(sound);
+      } catch (error) {
+        console.log('Ses yükleme hatası:', error);
+      }
+    };
+    
+    loadSound();
+    
+    return () => {
+      if (buttonSound) {
+        buttonSound.unloadAsync();
+      }
+    };
+  }, []);
+
+  const playButtonSound = async () => {
+    if (!isSoundEnabled) return;
+    try {
+      if (buttonSound) {
+        await buttonSound.replayAsync();
+      }
+    } catch (error) {
+      console.log('Ses çalma hatası:', error);
+    }
+  };
   const images = [
     { 
       id: 1, 
@@ -27,26 +63,30 @@ export default function MagicEraserSelectionScreen({ onSelectImage, onNavigate }
       icon: '🎭',
       source: require('./sihirliSilgi/1.resim/7.jpeg')
     },
+    { 
+      id: 9, 
+      name: 'Resim 9', 
+      icon: '🎪',
+      source: require('./sihirliSilgi/1.resim/9.jpg')
+    },
   ];
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={onNavigate}>
+        <TouchableOpacity style={styles.backButton} onPress={() => { playButtonSound(); onNavigate(); }}>
           <Text style={styles.backButtonText}>← Geri</Text>
         </TouchableOpacity>
         <Text style={styles.title}>🪄 Sihirli Silgi</Text>
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.subtitle}>Silmek istediğin resmi seç</Text>
-        
         <View style={styles.imageGrid}>
           {images.map((image) => (
             <TouchableOpacity
               key={image.id}
               style={styles.imageCard}
-              onPress={() => onSelectImage(image.id)}
+              onPress={() => { playButtonSound(); onSelectImage(image.id); }}
               activeOpacity={0.8}
             >
               <View style={styles.imagePreview}>
@@ -74,25 +114,25 @@ const styles = StyleSheet.create({
     backgroundColor: '#2C3E50',
   },
   header: {
-    paddingTop: 8,
+    paddingTop: screenWidth >= 1024 ? 50 : 20,
     paddingHorizontal: 8,
-    paddingBottom: 8,
+    paddingBottom: 1,
   },
   backButton: {
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
+    paddingHorizontal: screenWidth >= 1024 ? 12 : 12,
+    paddingVertical: screenWidth >= 1024 ? 6 : 6,
     borderRadius: 10,
     alignSelf: 'flex-start',
-    marginBottom: 8,
+    marginBottom: 3,
   },
   backButtonText: {
-    fontSize: 10,
+    fontSize: screenWidth >= 1024 ? 11 : 11,
     fontWeight: 'bold',
     color: 'white',
   },
   title: {
-    fontSize: 18,
+    fontSize: screenWidth >= 1024 ? 18 : 16,
     fontWeight: 'bold',
     color: 'white',
     textAlign: 'center',
@@ -100,6 +140,7 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: 8,
+    paddingTop: 0,
     paddingBottom: 12,
   },
   subtitle: {

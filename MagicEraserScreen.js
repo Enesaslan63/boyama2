@@ -1,22 +1,88 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView, Image, Dimensions } from 'react-native';
 import Svg, { Path, Defs, Mask, Rect, Image as SvgImage, ClipPath } from 'react-native-svg';
+import { Audio } from 'expo-av';
 
 const { width, height } = Dimensions.get('window');
+const screenWidth = width;
 
-// GENİŞLİK: Dar dikey form (sağa sola yayılmaz)
-const IMAGE_WIDTH = width * 0.65; 
-// YÜKSEKLİK: Dikey uzunluk korunur
-const IMAGE_HEIGHT = height * 0.65; 
-// KÖŞE RADIUS: Genişliğin %10'u kadar (Hafif yumuşatılmış köşeler)
+// Serbest boyamadaki canvas ile aynı boyutlar - daha büyük
+const IMAGE_WIDTH = screenWidth >= 1024 ? width * 0.7 : width - 300; 
+const IMAGE_HEIGHT = screenWidth >= 1024 ? height * 0.75 : height * 0.85; 
 const CORNER_RADIUS = IMAGE_WIDTH * 0.10; 
 
-export default function MagicEraserScreen({ onNavigate, imageId = 1 }) {
+export default function MagicEraserScreen({ onNavigate, imageId = 1, isSoundEnabled }) {
   const [eraserPaths, setEraserPaths] = useState([]);
   const [currentPath, setCurrentPath] = useState([]);
   const [isDrawing, setIsDrawing] = useState(false);
   const [brushSize] = useState(50);
   const [isButtonPressed, setIsButtonPressed] = useState(false);
+  const [buttonSound, setButtonSound] = useState(null);
+  const [eraserSound, setEraserSound] = useState(null);
+
+  useEffect(() => {
+    // Ses dosyalarını yükle
+    const loadSounds = async () => {
+      try {
+        const { sound: btnSound } = await Audio.Sound.createAsync(
+          require('./assets/ses/button.mp3')
+        );
+        setButtonSound(btnSound);
+
+        const { sound: erSound } = await Audio.Sound.createAsync(
+          require('./assets/ses/sihirlisilgi.mp3')
+        );
+        setEraserSound(erSound);
+      } catch (error) {
+        console.log('Ses yükleme hatası:', error);
+      }
+    };
+    
+    loadSounds();
+    
+    // Cleanup
+    return () => {
+      if (buttonSound) {
+        buttonSound.unloadAsync();
+      }
+      if (eraserSound) {
+        eraserSound.unloadAsync();
+      }
+    };
+  }, []);
+
+  const playButtonSound = async () => {
+    if (!isSoundEnabled) return;
+    try {
+      if (buttonSound) {
+        await buttonSound.replayAsync();
+      }
+    } catch (error) {
+      console.log('Ses çalma hatası:', error);
+    }
+  };
+
+  const playEraserSound = async () => {
+    if (!isSoundEnabled) return;
+    try {
+      if (eraserSound) {
+        await eraserSound.setIsLoopingAsync(true);
+        await eraserSound.playAsync();
+      }
+    } catch (error) {
+      console.log('Ses çalma hatası:', error);
+    }
+  };
+
+  const stopEraserSound = async () => {
+    try {
+      if (eraserSound) {
+        await eraserSound.stopAsync();
+      }
+    } catch (error) {
+      console.log('Ses durdurma hatası:', error);
+    }
+  };
 
   const handleTouchStart = (event) => {
     if (isButtonPressed) return;
@@ -27,6 +93,7 @@ export default function MagicEraserScreen({ onNavigate, imageId = 1 }) {
       return;
     }
     
+    playEraserSound();
     setIsDrawing(true);
     setCurrentPath([{ x: locationX, y: locationY }]);
   };
@@ -51,6 +118,7 @@ export default function MagicEraserScreen({ onNavigate, imageId = 1 }) {
   };
 
   const handleTouchEnd = () => {
+    stopEraserSound();
     if (isDrawing && currentPath.length > 0 && !isButtonPressed) {
       setEraserPaths(prev => [...prev, currentPath]);
     }
@@ -68,6 +136,7 @@ export default function MagicEraserScreen({ onNavigate, imageId = 1 }) {
   };
 
   const clearAll = () => {
+    playButtonSound();
     setEraserPaths([]);
     setCurrentPath([]);
     setIsButtonPressed(false);
@@ -75,14 +144,11 @@ export default function MagicEraserScreen({ onNavigate, imageId = 1 }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity style={styles.backButton} onPress={onNavigate}>
+      <TouchableOpacity style={styles.backButton} onPress={() => { playButtonSound(); onNavigate(); }}>
         <Text style={styles.backButtonText}>← Geri</Text>
       </TouchableOpacity>
 
       <View style={styles.content}>
-        <Text style={styles.title}>🪄 Sihirli Silgi</Text>
-        <Text style={styles.subtitle}>%10 kavisli alanı temizle!</Text>
-
         <View style={styles.imageWrapper}>
           <View 
             style={styles.imageContainer}
@@ -100,6 +166,8 @@ export default function MagicEraserScreen({ onNavigate, imageId = 1 }) {
                   imageId === 3 ? require('./sihirliSilgi/1.resim/4.webp') :
                   imageId === 5 ? require('./sihirliSilgi/1.resim/6.jpeg') :
                   imageId === 7 ? require('./sihirliSilgi/1.resim/8.jpeg') :
+                  imageId === 9 ? require('./sihirliSilgi/1.resim/10.jpeg') :
+                  imageId === 10 ? require('./sihirliSilgi/1.resim/10.jpeg') :
                   require('./sihirliSilgi/1.resim/6.jpeg')
                 }
                 style={[
@@ -152,6 +220,8 @@ export default function MagicEraserScreen({ onNavigate, imageId = 1 }) {
                   imageId === 3 ? require('./sihirliSilgi/1.resim/3.webp') :
                   imageId === 5 ? require('./sihirliSilgi/1.resim/5.jpeg') :
                   imageId === 7 ? require('./sihirliSilgi/1.resim/7.jpeg') :
+                  imageId === 9 ? require('./sihirliSilgi/1.resim/9.jpg') :
+                  imageId === 10 ? require('./sihirliSilgi/1.resim/10.jpeg') :
                   require('./sihirliSilgi/1.resim/6.jpeg')
                 }
                 preserveAspectRatio="xMidYMid slice"
@@ -161,21 +231,6 @@ export default function MagicEraserScreen({ onNavigate, imageId = 1 }) {
             </Svg>
           </View>
         </View>
-
-        <TouchableOpacity 
-          style={styles.clearButton} 
-          onPress={clearAll}
-          onPressIn={() => {
-            setIsButtonPressed(true);
-            setIsDrawing(false);
-            setCurrentPath([]);
-          }}
-          onPressOut={() => {
-            setTimeout(() => setIsButtonPressed(false), 100);
-          }}
-        >
-          <Text style={styles.clearButtonText}>🔄 Yeniden Başlat</Text>
-        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -188,23 +243,26 @@ const styles = StyleSheet.create({
   },
   backButton: {
     position: 'absolute',
-    top: 50,
-    left: 20,
+    top: screenWidth >= 1024 ? 50 : 5,
+    left: screenWidth >= 1024 ? 20 : 10,
     zIndex: 10,
     backgroundColor: '#fff',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingHorizontal: screenWidth >= 1024 ? 12 : 12,
+    paddingVertical: screenWidth >= 1024 ? 6 : 6,
     borderRadius: 10,
   },
   backButtonText: {
     fontWeight: 'bold',
     color: '#000',
-    fontSize: 12,
+    fontSize: screenWidth >= 1024 ? 12 : 11,
   },
   content: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    paddingHorizontal: screenWidth >= 1024 ? 0 : 150,
+    paddingTop: screenWidth >= 1024 ? 0 : 10,
+    paddingBottom: screenWidth >= 1024 ? 0 : 40,
   },
   title: {
     fontSize: 26,
@@ -247,7 +305,7 @@ const styles = StyleSheet.create({
     left: 0,
   },
   clearButton: {
-    marginTop: 40,
+    marginTop: screenWidth >= 1024 ? 40 : 20,
     backgroundColor: '#6C63FF',
     paddingHorizontal: 20,
     paddingVertical: 8,
