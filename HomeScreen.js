@@ -1,13 +1,12 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView, StatusBar, ScrollView } from 'react-native';
 
-export default function HomeScreen({ onNavigateToFreeDraw, onNavigateToAnimalPainting, onNavigateToMagicEraser }) {
+export default function HomeScreen({ onNavigateToFreeDraw, onNavigateToAnimalPainting, onNavigateToMagicEraser, onNavigateToMyPictures }) {
   const categories = [
     { id: 1, title: 'Serbest Çizim', color: ['#FF9A9E', '#FAD0C4'], icon: '✏️', badge: 'Popüler', route: 'freeDraw' },
     { id: 3, title: 'Hayvan Boyama', color: ['#FF6B9D', '#C06C84'], icon: '🦁', badge: 'Yeni', route: 'animalPainting' },
-    { id: 4, title: 'Eğlenceli Şekiller', color: ['#FFA751', '#FFE259'], icon: '✨' },
-    { id: 5, title: 'Resimlerim', color: ['#4FACFE', '#00F2FE'], icon: '🖼️' },
     { id: 6, title: 'Sihirli Silgi', color: ['#A18CD1', '#FBC2EB'], icon: '🪄', badge: 'Yeni', route: 'magicEraser' },
+    { id: 5, title: 'Resimlerim', color: ['#4FACFE', '#00F2FE'], icon: '🖼️', route: 'myPictures' },
   ];
 
   return (
@@ -54,6 +53,7 @@ export default function HomeScreen({ onNavigateToFreeDraw, onNavigateToAnimalPai
                 if (category.route === 'freeDraw') onNavigateToFreeDraw();
                 else if (category.route === 'animalPainting') onNavigateToAnimalPainting();
                 else if (category.route === 'magicEraser') onNavigateToMagicEraser();
+                else if (category.route === 'myPictures') onNavigateToMyPictures();
               }}
               activeOpacity={0.8}
             >
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
   header: {
     alignItems: 'center',
     marginTop: 8,
-    marginBottom: 8,
+    marginBottom: 20,
   },
   logoContainer: {
     width: 35,
@@ -134,12 +134,12 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'center',
     paddingHorizontal: 8,
-    gap: 5,
+    gap: 10,
   },
   cardWrapper: {
     width: '15%',
     aspectRatio: 0.7,
-    marginBottom: 2,
+    marginBottom: 5,
     borderRadius: 20,
     overflow: 'hidden',
   },

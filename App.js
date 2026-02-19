@@ -5,11 +5,15 @@ import AnimalPaintingScreen from './AnimalPaintingScreen';
 import AnimalSelectionScreen from './AnimalSelectionScreen';
 import MagicEraserScreen from './MagicEraserScreen';
 import MagicEraserSelectionScreen from './MagicEraserSelectionScreen';
+import MyPicturesScreen from './MyPicturesScreen';
+import PictureDetailScreen from './PictureDetailScreen';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState('home');
   const [selectedAnimal, setSelectedAnimal] = useState('aslan');
   const [selectedMagicImage, setSelectedMagicImage] = useState(1);
+  const [savedPictures, setSavedPictures] = useState([]);
+  const [selectedPicture, setSelectedPicture] = useState(null);
 
   if (currentScreen === 'home') {
     return (
@@ -17,6 +21,7 @@ export default function App() {
         onNavigateToFreeDraw={() => setCurrentScreen('freeDraw')}
         onNavigateToAnimalPainting={() => setCurrentScreen('animalSelection')}
         onNavigateToMagicEraser={() => setCurrentScreen('magicEraserSelection')}
+        onNavigateToMyPictures={() => setCurrentScreen('myPictures')}
       />
     );
   }
@@ -37,7 +42,11 @@ export default function App() {
     return (
       <AnimalPaintingScreen 
         initialAnimal={selectedAnimal}
-        onNavigate={() => setCurrentScreen('animalSelection')} 
+        onNavigate={() => setCurrentScreen('animalSelection')}
+        onSave={(pictureData) => {
+          setSavedPictures(prev => [...prev, pictureData]);
+          setCurrentScreen('myPictures');
+        }}
       />
     );
   }
@@ -59,6 +68,28 @@ export default function App() {
       <MagicEraserScreen 
         imageId={selectedMagicImage}
         onNavigate={() => setCurrentScreen('magicEraserSelection')} 
+      />
+    );
+  }
+
+  if (currentScreen === 'myPictures') {
+    return (
+      <MyPicturesScreen 
+        pictures={savedPictures}
+        onNavigate={() => setCurrentScreen('home')}
+        onSelectPicture={(picture) => {
+          setSelectedPicture(picture);
+          setCurrentScreen('pictureDetail');
+        }}
+      />
+    );
+  }
+
+  if (currentScreen === 'pictureDetail') {
+    return (
+      <PictureDetailScreen 
+        picture={selectedPicture}
+        onNavigate={() => setCurrentScreen('myPictures')}
       />
     );
   }

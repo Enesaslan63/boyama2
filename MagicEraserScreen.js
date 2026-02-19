@@ -97,7 +97,10 @@ export default function MagicEraserScreen({ onNavigate, imageId = 1 }) {
               <Image 
                 source={
                   imageId === 1 ? require('./sihirliSilgi/1.resim/2.webp') :
-                  require('./sihirliSilgi/1.resim/4.webp')
+                  imageId === 3 ? require('./sihirliSilgi/1.resim/4.webp') :
+                  imageId === 5 ? require('./sihirliSilgi/1.resim/6.jpeg') :
+                  imageId === 7 ? require('./sihirliSilgi/1.resim/8.jpeg') :
+                  require('./sihirliSilgi/1.resim/6.jpeg')
                 }
                 style={[
                   styles.fullImage,
@@ -146,7 +149,10 @@ export default function MagicEraserScreen({ onNavigate, imageId = 1 }) {
                 height={IMAGE_HEIGHT}
                 href={
                   imageId === 1 ? require('./sihirliSilgi/1.resim/1.webp') :
-                  require('./sihirliSilgi/1.resim/3.webp')
+                  imageId === 3 ? require('./sihirliSilgi/1.resim/3.webp') :
+                  imageId === 5 ? require('./sihirliSilgi/1.resim/5.jpeg') :
+                  imageId === 7 ? require('./sihirliSilgi/1.resim/7.jpeg') :
+                  require('./sihirliSilgi/1.resim/6.jpeg')
                 }
                 preserveAspectRatio="xMidYMid slice"
                 mask="url(#eraserMask)"

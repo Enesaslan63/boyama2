@@ -1,25 +1,45 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
+import Svg from 'react-native-svg';
+import { AslanSiyahCizgiler } from './hayvan/aslan';
+import { KediSiyahCizgiler } from './hayvan/kedi';
+import { KopekSiyahCizgiler } from './hayvan/kopek';
+import { KusSiyahCizgiler } from './hayvan/kus';
+import { KurtSiyahCizgiler } from './hayvan/kurt';
+import { MaymunSiyahCizgiler } from './hayvan/maymun';
+import { FilSiyahCizgiler } from './hayvan/fil';
+import { InekSiyahCizgiler } from './hayvan/inek';
+import { KartalSiyahCizgiler } from './hayvan/kartal';
+import { BalikSiyahCizgiler } from './hayvan/balik';
+import { AyiSiyahCizgiler } from './hayvan/ayi';
+import { BalinaSiyahCizgiler } from './hayvan/balina';
+import { TavsanSiyahCizgiler } from './hayvan/tavsan';
+import { BibalikSiyahCizgiler } from './hayvan/bibalik';
+import { YildizSiyahCizgiler } from './hayvan/yildiz';
+import { TimsahSiyahCizgiler } from './hayvan/timsah';
+import { ZürafaSiyahCizgiler } from './hayvan/zürafa';
+import { PenguenSiyahCizgiler } from './hayvan/penguen';
 
 export default function AnimalSelectionScreen({ onSelectAnimal, onNavigate }) {
   const animals = [
-    { id: 'aslan', name: 'Aslan', icon: '🦁', color: '#FFB74D' },
-    { id: 'kedi', name: 'Kedi', icon: '🐱', color: '#FF8A65' },
-    { id: 'kopek', name: 'Köpek', icon: '🐕', color: '#8D6E63' },
-    { id: 'kus', name: 'Kuş', icon: '🐦', color: '#42A5F5' },
-    { id: 'kurt', name: 'Kurt', icon: '🐺', color: '#78909C' },
-    { id: 'maymun', name: 'Maymun', icon: '🐵', color: '#A1887F' },
-    { id: 'fil', name: 'Fil', icon: '🐘', color: '#90A4AE' },
-    { id: 'inek', name: 'İnek', icon: '🐄', color: '#BCAAA4' },
-    { id: 'kartal', name: 'Kartal', icon: '🦅', color: '#795548' },
-    { id: 'balik', name: 'Balık', icon: '🐟', color: '#4FC3F7' },
-    { id: 'ayi', name: 'Ayı', icon: '🐻', color: '#8D6E63' },
-    { id: 'balina', name: 'Balina', icon: '🐋', color: '#29B6F6' },
-    { id: 'tavsan', name: 'Tavşan', icon: '🐰', color: '#BCAAA4' },
-    { id: 'bibalik', name: 'Köpekbalığı', icon: '🦈', color: '#546E7A' },
-    { id: 'yildiz', name: 'Yıldız', icon: '⭐', color: '#FFD54F' },
-    { id: 'timsah', name: 'Timsah', icon: '🐊', color: '#689F38' },
-    { id: 'zürafa', name: 'Zürafa', icon: '🦒', color: '#FFA726' },
+    { id: 'aslan', name: 'Aslan', icon: '🦁', color: '#FFB74D', Component: AslanSiyahCizgiler },
+    { id: 'kedi', name: 'Kedi', icon: '🐱', color: '#FF8A65', Component: KediSiyahCizgiler },
+    { id: 'kopek', name: 'Köpek', icon: '🐕', color: '#8D6E63', Component: KopekSiyahCizgiler },
+    { id: 'kus', name: 'Kuş', icon: '🐦', color: '#42A5F5', Component: KusSiyahCizgiler },
+    { id: 'kurt', name: 'Kurt', icon: '🐺', color: '#78909C', Component: KurtSiyahCizgiler },
+    { id: 'maymun', name: 'Maymun', icon: '🐵', color: '#A1887F', Component: MaymunSiyahCizgiler },
+    { id: 'fil', name: 'Fil', icon: '🐘', color: '#90A4AE', Component: FilSiyahCizgiler },
+    { id: 'inek', name: 'İnek', icon: '🐄', color: '#BCAAA4', Component: InekSiyahCizgiler },
+    { id: 'kartal', name: 'Kartal', icon: '🦅', color: '#795548', Component: KartalSiyahCizgiler },
+    { id: 'balik', name: 'Balık', icon: '🐟', color: '#4FC3F7', Component: BalikSiyahCizgiler },
+    { id: 'ayi', name: 'Ayı', icon: '🐻', color: '#8D6E63', Component: AyiSiyahCizgiler },
+    { id: 'balina', name: 'Balina', icon: '🐋', color: '#29B6F6', Component: BalinaSiyahCizgiler },
+    { id: 'tavsan', name: 'Tavşan', icon: '🐰', color: '#BCAAA4', Component: TavsanSiyahCizgiler },
+    { id: 'bibalik', name: 'Köpekbalığı', icon: '🦈', color: '#546E7A', Component: BibalikSiyahCizgiler },
+    { id: 'yildiz', name: 'Yıldız', icon: '⭐', color: '#FFD54F', Component: YildizSiyahCizgiler },
+    { id: 'timsah', name: 'Timsah', icon: '🐊', color: '#689F38', Component: TimsahSiyahCizgiler },
+    { id: 'zürafa', name: 'Zürafa', icon: '🦒', color: '#FFA726', Component: ZürafaSiyahCizgiler },
+    { id: 'penguen', name: 'Penguen', icon: '🐧', color: '#546E7A', Component: PenguenSiyahCizgiler },
   ];
 
   return (
@@ -38,11 +58,16 @@ export default function AnimalSelectionScreen({ onSelectAnimal, onNavigate }) {
           {animals.map((animal) => (
             <TouchableOpacity
               key={animal.id}
-              style={[styles.animalCard, { backgroundColor: animal.color }]}
+              style={styles.animalCard}
               onPress={() => onSelectAnimal(animal.id)}
               activeOpacity={0.8}
             >
-              <View style={styles.cardContent}>
+              <View style={styles.imagePreview}>
+                <Svg width="100%" height="100%" viewBox="0 0 1024 1536" preserveAspectRatio="xMidYMid meet">
+                  <animal.Component />
+                </Svg>
+              </View>
+              <View style={styles.cardFooter}>
                 <Text style={styles.animalIcon}>{animal.icon}</Text>
                 <Text style={styles.animalName}>{animal.name}</Text>
               </View>
@@ -101,31 +126,34 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   animalCard: {
-    width: '15%',
-    aspectRatio: 0.75,
-    borderRadius: 8,
+    width: '25%',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 12,
+    overflow: 'hidden',
     elevation: 2,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 2,
   },
-  cardContent: {
-    flex: 1,
-    justifyContent: 'center',
+  imagePreview: {
+    width: '100%',
+    aspectRatio: 1,
+    backgroundColor: '#fff',
+  },
+  cardFooter: {
+    flexDirection: 'row',
     alignItems: 'center',
-    padding: 2,
+    justifyContent: 'center',
+    padding: 5,
+    gap: 3,
   },
   animalIcon: {
-    fontSize: 16,
-    marginBottom: 1,
+    fontSize: 10,
   },
   animalName: {
-    fontSize: 6,
+    fontSize: 8,
     fontWeight: 'bold',
     color: 'white',
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
-    textShadowOffset: { width: 0.5, height: 0.5 },
-    textShadowRadius: 1,
   },
 });

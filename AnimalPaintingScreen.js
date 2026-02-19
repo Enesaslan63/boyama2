@@ -19,6 +19,7 @@ import { BibalikSiyahCizgiler } from './hayvan/bibalik';
 import { YildizSiyahCizgiler } from './hayvan/yildiz';
 import { TimsahSiyahCizgiler } from './hayvan/timsah';
 import { ZürafaSiyahCizgiler } from './hayvan/zürafa';
+import { PenguenSiyahCizgiler } from './hayvan/penguen';
 
 const SVG_VIEW_WIDTH = 1024;
 const SVG_VIEW_HEIGHT = 1536;
@@ -74,7 +75,10 @@ const TIMSAH_GOVDE_YOLU = "M588 266.9c-4.7 1.1-11.4 3-15 4.4-3.8 1.5-10 2.8-14.5
 // Zürafa figürünün ana path'i - boyama için maske
 const ZÜRAFA_GOVDE_YOLU = "M401 144.9c-11 3.5-20.5 11.2-25.3 20.3-5.5 10.5-5.8 25.2-.6 36.3 3.3 7.1 13.1 16.6 19.9 19.1 4.5 1.7 5.6 2.6 6.1 5 .3 1.6 3.2 13.4 6.3 26.1 3.1 12.8 5.6 23.6 5.6 24.1s-1.7 1.6-3.7 2.6c-2.1 1-8.2 4.7-13.7 8.3l-9.8 6.6-6.7-7.1c-24.4-25.8-59.4-41.8-96.1-43.7-20.4-1.1-36.9 1.5-50.7 7.9-15.7 7.5-22.1 19.3-18.8 34.9 7.6 36.5 51.7 72.8 96.9 79.8 8.4 1.3 28.3.7 31.4-1 2.8-1.5 2.8-.3.3 4.7-15.5 30.5-32.8 87.5-37.6 124.1-6.2 47.5 8.5 83.9 45 111.3 13.1 9.9 34.1 20.6 52.9 27 8.1 2.8 9.6 3.6 9.6 5.4 0 1.2-1.4 11.6-3 23-1.7 11.5-5.3 38-8.1 58.9-4.5 34.5-6.4 48.5-12.9 99-1.1 8.8-2.4 18.5-2.9 21.5-.9 5.6-.1 9 2.2 9H517c110 0 128.7-.2 129.9-1.5 1.6-1.5 1.2-4.3-7-55-2.1-13.2-4.8-31-5.9-39.5-1.2-8.5-4.4-30.6-7.1-49-6.2-42.8-9.9-69.3-9.6-69.5.1-.1 5.2-1.8 11.2-3.9 14.4-4.9 32.9-13.9 44.6-21.8 12.1-8.1 29.8-25.6 36-35.8 10-16.5 13.8-30.5 14.6-54.3.6-17.9-.1-26-4.3-47.7-6-30.9-17.7-67.8-29.5-92.9-2.7-5.7-4.9-10.7-4.9-11 0-.3 5.6-.4 12.3-.3 24 .7 49-7.5 71.7-23.6 14-9.9 29.3-27 35.8-39.7 6.2-12.4 8.1-27.4 4.5-35.5-2.4-5.4-10.2-12.9-17-16.4-11.2-5.6-33.5-9.3-50.8-8.3-35.2 2-67.9 16.3-92.7 40.7l-9.7 9.5-6.9-5c-3.7-2.7-10.5-6.8-15-9s-8.2-4.5-8.2-5c0-.6 2.9-12.2 6.4-25.8l6.4-24.8 5.9-2.8c7.6-3.6 16-11.9 19.8-19.6 2.8-5.5 3-6.8 3-16.5 0-9.3-.3-11.1-2.7-16.3-3.7-7.8-12.1-16-20.5-19.9-12.3-5.8-28.2-4.9-39.5 2.3-6.5 4.2-13.5 12-16.6 18.7-2.4 5.1-2.7 6.9-2.7 16.4v10.6l4.6 9.1 4.7 9.2-5.9 21.5c-3.2 11.8-5.9 22.2-5.9 23.1 0 1.7.4 1.7-15.5-1.2-24.3-4.4-53.5-4-80.5 1-7.4 1.3-13.5 2.3-13.6 2.2-.2-.2-3.1-10.8-6.4-23.7l-6.2-23.5 3.5-6.5c4.5-8.5 6.1-15.4 5.5-25-.9-14.7-9.9-27.8-23.6-34.3-5.9-2.8-7.8-3.2-16.2-3.4-5.2-.1-10.6.1-12 .6z";
 
-export default function AnimalPaintingScreen({ onNavigate, initialAnimal = 'aslan' }) {
+// Penguen figürünün ana path'i - boyama için maske
+const PENGUEN_GOVDE_YOLU = "M496.5 182.7c-45.2 3.6-82.5 17.7-117.5 44.4-26.5 20.1-49.9 51.4-63.8 85.4-9.9 24-15.5 47-20.2 82.5-.6 4.6-1.7 10-2.4 12-2.7 7.8-12.9 23.3-44.7 67.7-22.1 30.9-31 44.6-39.9 61.8-2.9 5.5-5.6 10.4-6 11-.4.5-2.3 4.8-4.3 9.5-9 22.2-6.8 35.5 6.7 39.4 6.7 2 8.8 2 18.1.1 13.4-2.8 39.1-15.9 45.9-23.4 1.8-2 5.3-3 4.2-1.2-.3.4-1.3 7.7-2.2 16.2-4.2 39.7 3.8 74.1 24.3 104.7 12.2 18.2 30.2 34.2 54.8 48.7 4.4 2.6 9.1 5.1 10.4 5.6 2.3.9 2 1.2-3.9 4-23.3 11-32.2 31.7-18.7 43.6 4.3 3.8 12.6 5.8 20.5 5 4.1-.4 5.4-.2 5.9.9 1 2.6 8.7 6.3 15.4 7.3 7.1 1.2 13.9.4 20.5-2.4 3.4-1.4 4.1-1.4 8.3.2 3.1 1.2 7.4 1.8 13.2 1.8 7.8 0 9.1-.3 16.1-3.8 9.4-4.6 17.6-13.1 20.9-21.7l2.3-5.6 5 .7c23.9 3.6 70.7 3.6 93.4 0l5.2-.8 3 6.5c4.4 9.5 14.3 18.8 23.8 22.4 8.7 3.4 15.9 3.6 24.1.8 5.8-1.9 5.8-1.9 11.2.1 3.8 1.5 7.9 2.1 13.9 2.2 7.3.1 9.2-.3 13.7-2.6 2.8-1.5 5.8-3.5 6.5-4.4 1.1-1.5 2.9-1.8 10.3-1.8 11.2-.1 17.2-2.6 21.3-8.9 3.2-5.1 3.6-13.2.9-18.8-3.2-6.4-12.6-15-21.3-19.4l-8-4.1 7.5-3.9c32.7-17.1 59.3-43.7 71.9-71.9 12.7-28.5 16.3-61.7 10.6-97.8l-.6-3.9 10.5 7.1c12.6 8.5 29.2 16.2 40 18.6 17.5 3.9 28.5-1.9 29.5-15.5.5-6.9-3.2-20.7-8.5-32-6.6-13.7-21.2-38-35.8-59.1-6.1-8.9-21.1-30.3-24.7-35.3-6.4-8.9-28.4-42-30.1-45.2-.9-1.6-2.1-7.7-2.7-13.5-6.8-63.2-23.7-105.6-57.3-143.7-23.5-26.7-51.6-45.4-87.3-58-26.5-9.5-61-13.9-89.9-11.5zm49.5 10.8c43.7 6.6 84.8 27.4 114.4 57.8 7.1 7.3 20.3 23.8 25.3 31.5 16.6 25.9 29.5 62.9 33.7 97.2 3.8 30.4 3.6 29.8 12.3 43.4 2.5 3.9 5.5 8.7 6.6 10.6 1 1.9 3.2 5.3 4.8 7.5 7.6 10.2 30.7 43.4 47.1 67.5 22.8 33.5 36.2 64.1 32.8 74.5-2.1 6.3-11.1 7-25.4 1.8-11.8-4.2-29.9-14.4-33.6-18.8-.7-.9-2.5-2.2-3.9-3-1.4-.7-5.1-3.9-8.1-7-6.9-7-8.4-7.9-11-6.5-2.5 1.3-2.5 3.2-.1 12.3 4.2 15.7 5.5 26.6 5.5 45.2 0 15.8-.3 19.7-2.8 31.5-4.6 22.3-12.7 39.9-26.4 57-8 10.1-13.6 15.2-27.2 25.4-13.1 9.8-40.5 24-57.8 30-55.5 19.2-120.6 24.2-184.2 14-39.1-6.2-78.2-20.7-105.8-39.1-29-19.4-50.3-48.5-58.4-79.7-6.1-23.5-6.4-50.8-.9-77.9 1.8-8.7 3-16.4 2.7-17.2-.3-.8-1.7-1.5-3.1-1.5-1.9 0-4.1 1.7-8.3 6.1-6.5 7-22.2 18.3-33.2 23.8-15.9 8.1-30.3 10.7-36.3 6.8-2.4-1.6-2.7-2.3-2.7-7.5 0-10.7 10-34.2 23-53.7 1.4-2.2 4.5-7.2 6.8-11 4.7-7.7 8.2-12.8 22.9-33.2 28.5-39.6 37.5-53 43.8-65.4 3.4-6.7 3.6-7.7 8.1-35.9 2.1-13.3 5.8-30.1 9.1-41 5.6-18.6 17.4-44.5 25.6-56.3 2.3-3.3 6.2-9 8.7-12.6 10.3-15.2 35.6-38 54.5-49.3 26.8-16 58.9-26.2 91.5-29.2 8.9-.8 39.7.4 50 1.9zM381.5 756.6c13.4 5.9 43.8 14.4 60.5 16.9 7.7 1.1 7.9 1.3 7 4.4-2.1 7.3-10.4 15.7-19 19.2-1.9.8-6.4 1.4-10 1.4-6.2-.1-8.8-.9-14.2-4.7-1.4-1-2.8-.7-7.5 1.6-11.7 5.8-24.8 4.3-27.9-3-1.6-3.7-4.4-5-7.4-3.4-1.2.6-4.9 1.2-8.3 1.3-15.4.3-19.1-9.6-8-21.4 6-6.4 9.7-8.6 20.2-12 4.7-1.5 8.7-2.8 8.7-2.8.1-.1 2.8 1.1 5.9 2.5zm276.7.3c10.9 3.7 12.2 4.4 18.6 10.5 6.3 5.9 8.2 9.2 8.2 14.1 0 8-10.9 11.6-22.3 7.3-3.6-1.4-7.4.2-7.9 3.4-.5 3.6-7.8 6.8-15.4 6.8-4.8 0-7.4-.6-12-3-3.2-1.6-6.4-3-7.1-3-.7 0-2.8 1.1-4.8 2.4-12.3 8.4-33.1-.3-40-16.7l-1.4-3.4 11.7-2.2c15.9-3 28.4-6.3 42.7-11 9.3-3.1 20.4-7.3 21.1-8 0-.1 3.9 1.2 8.6 2.8z";
+
+export default function AnimalPaintingScreen({ onNavigate, onSave, initialAnimal = 'aslan' }) {
   const [paths, setPaths] = useState([]);
   const [currentPath, setCurrentPath] = useState([]);
   const [color, setColor] = useState('#FF0000');
@@ -249,7 +253,9 @@ export default function AnimalPaintingScreen({ onNavigate, initialAnimal = 'asla
                 selectedAnimal === 'bibalik' ? BIBALIK_GOVDE_YOLU :
                 selectedAnimal === 'yildiz' ? YILDIZ_GOVDE_YOLU :
                 selectedAnimal === 'timsah' ? TIMSAH_GOVDE_YOLU :
-                ZÜRAFA_GOVDE_YOLU
+                selectedAnimal === 'zürafa' ? ZÜRAFA_GOVDE_YOLU :
+                selectedAnimal === 'penguen' ? PENGUEN_GOVDE_YOLU :
+                ASLAN_GOVDE_YOLU
               } />
             </ClipPath>
           </Defs>
@@ -294,7 +300,9 @@ export default function AnimalPaintingScreen({ onNavigate, initialAnimal = 'asla
            selectedAnimal === 'bibalik' ? <BibalikSiyahCizgiler /> :
            selectedAnimal === 'yildiz' ? <YildizSiyahCizgiler /> :
            selectedAnimal === 'timsah' ? <TimsahSiyahCizgiler /> :
-           <ZürafaSiyahCizgiler />}
+           selectedAnimal === 'zürafa' ? <ZürafaSiyahCizgiler /> :
+           selectedAnimal === 'penguen' ? <PenguenSiyahCizgiler /> :
+           <AslanSiyahCizgiler />}
         </Svg>
       </View>
 
@@ -312,197 +320,6 @@ export default function AnimalPaintingScreen({ onNavigate, initialAnimal = 'asla
         ]}
       >
         <ScrollView showsVerticalScrollIndicator={false}>
-          {/* Hayvan Seçimi */}
-          <Text style={styles.sectionTitle}>Hayvan Seç</Text>
-          <View style={styles.animalSelection}>
-            <TouchableOpacity 
-              style={[styles.animalButton, selectedAnimal === 'aslan' && styles.animalButtonActive]} 
-              onPress={() => {
-                setSelectedAnimal('aslan');
-                setPaths([]);
-              }}
-            >
-              <Text style={styles.animalIcon}>🦁</Text>
-              <Text style={styles.animalText}>Aslan</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity 
-              style={[styles.animalButton, selectedAnimal === 'kedi' && styles.animalButtonActive]} 
-              onPress={() => {
-                setSelectedAnimal('kedi');
-                setPaths([]);
-              }}
-            >
-              <Text style={styles.animalIcon}>🐱</Text>
-              <Text style={styles.animalText}>Kedi</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity 
-              style={[styles.animalButton, selectedAnimal === 'kopek' && styles.animalButtonActive]} 
-              onPress={() => {
-                setSelectedAnimal('kopek');
-                setPaths([]);
-              }}
-            >
-              <Text style={styles.animalIcon}>🐕</Text>
-              <Text style={styles.animalText}>Köpek</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity 
-              style={[styles.animalButton, selectedAnimal === 'kus' && styles.animalButtonActive]} 
-              onPress={() => {
-                setSelectedAnimal('kus');
-                setPaths([]);
-              }}
-            >
-              <Text style={styles.animalIcon}>🐦</Text>
-              <Text style={styles.animalText}>Kuş</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity 
-              style={[styles.animalButton, selectedAnimal === 'kurt' && styles.animalButtonActive]} 
-              onPress={() => {
-                setSelectedAnimal('kurt');
-                setPaths([]);
-              }}
-            >
-              <Text style={styles.animalIcon}>🐺</Text>
-              <Text style={styles.animalText}>Kurt</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity 
-              style={[styles.animalButton, selectedAnimal === 'maymun' && styles.animalButtonActive]} 
-              onPress={() => {
-                setSelectedAnimal('maymun');
-                setPaths([]);
-              }}
-            >
-              <Text style={styles.animalIcon}>🐵</Text>
-              <Text style={styles.animalText}>Maymun</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity 
-              style={[styles.animalButton, selectedAnimal === 'fil' && styles.animalButtonActive]} 
-              onPress={() => {
-                setSelectedAnimal('fil');
-                setPaths([]);
-              }}
-            >
-              <Text style={styles.animalIcon}>🐘</Text>
-              <Text style={styles.animalText}>Fil</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity 
-              style={[styles.animalButton, selectedAnimal === 'inek' && styles.animalButtonActive]} 
-              onPress={() => {
-                setSelectedAnimal('inek');
-                setPaths([]);
-              }}
-            >
-              <Text style={styles.animalIcon}>🐄</Text>
-              <Text style={styles.animalText}>İnek</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity 
-              style={[styles.animalButton, selectedAnimal === 'kartal' && styles.animalButtonActive]} 
-              onPress={() => {
-                setSelectedAnimal('kartal');
-                setPaths([]);
-              }}
-            >
-              <Text style={styles.animalIcon}>🦅</Text>
-              <Text style={styles.animalText}>Kartal</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity 
-              style={[styles.animalButton, selectedAnimal === 'balik' && styles.animalButtonActive]} 
-              onPress={() => {
-                setSelectedAnimal('balik');
-                setPaths([]);
-              }}
-            >
-              <Text style={styles.animalIcon}>🐟</Text>
-              <Text style={styles.animalText}>Balık</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity 
-              style={[styles.animalButton, selectedAnimal === 'ayi' && styles.animalButtonActive]} 
-              onPress={() => {
-                setSelectedAnimal('ayi');
-                setPaths([]);
-              }}
-            >
-              <Text style={styles.animalIcon}>🐻</Text>
-              <Text style={styles.animalText}>Ayı</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity 
-              style={[styles.animalButton, selectedAnimal === 'balina' && styles.animalButtonActive]} 
-              onPress={() => {
-                setSelectedAnimal('balina');
-                setPaths([]);
-              }}
-            >
-              <Text style={styles.animalIcon}>🐋</Text>
-              <Text style={styles.animalText}>Balina</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity 
-              style={[styles.animalButton, selectedAnimal === 'tavsan' && styles.animalButtonActive]} 
-              onPress={() => {
-                setSelectedAnimal('tavsan');
-                setPaths([]);
-              }}
-            >
-              <Text style={styles.animalIcon}>🐰</Text>
-              <Text style={styles.animalText}>Tavşan</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity 
-              style={[styles.animalButton, selectedAnimal === 'bibalik' && styles.animalButtonActive]} 
-              onPress={() => {
-                setSelectedAnimal('bibalik');
-                setPaths([]);
-              }}
-            >
-              <Text style={styles.animalIcon}>🦈</Text>
-              <Text style={styles.animalText}>Köpekbalığı</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity 
-              style={[styles.animalButton, selectedAnimal === 'yildiz' && styles.animalButtonActive]} 
-              onPress={() => {
-                setSelectedAnimal('yildiz');
-                setPaths([]);
-              }}
-            >
-              <Text style={styles.animalIcon}>⭐</Text>
-              <Text style={styles.animalText}>Yıldız</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity 
-              style={[styles.animalButton, selectedAnimal === 'timsah' && styles.animalButtonActive]} 
-              onPress={() => {
-                setSelectedAnimal('timsah');
-                setPaths([]);
-              }}
-            >
-              <Text style={styles.animalIcon}>🐊</Text>
-              <Text style={styles.animalText}>Timsah</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity 
-              style={[styles.animalButton, selectedAnimal === 'zürafa' && styles.animalButtonActive]} 
-              onPress={() => {
-                setSelectedAnimal('zürafa');
-                setPaths([]);
-              }}
-            >
-              <Text style={styles.animalIcon}>🦒</Text>
-              <Text style={styles.animalText}>Zürafa</Text>
-            </TouchableOpacity>
-          </View>
-
           <View style={styles.selectedColorDisplay}>
             <View style={[
               styles.selectedColorCircle, 
@@ -592,11 +409,26 @@ export default function AnimalPaintingScreen({ onNavigate, initialAnimal = 'asla
           </TouchableOpacity>
 
           <TouchableOpacity 
-            style={[styles.toolButton, styles.saveButton]} 
-            onPress={() => alert('Resim kaydedildi!')}
+            style={[styles.toolButton, styles.saveButton, paths.length === 0 && styles.toolButtonDisabled]} 
+            onPress={() => {
+              if (paths.length === 0) {
+                alert('Önce boyama yapmalısın!');
+                return;
+              }
+              // Deep copy yaparak kaydet
+              const pictureData = {
+                id: Date.now(),
+                animal: selectedAnimal,
+                paths: JSON.parse(JSON.stringify(paths)),
+                date: new Date().toLocaleDateString('tr-TR'),
+              };
+              onSave(pictureData);
+              alert('Resim kaydedildi!');
+            }}
+            disabled={paths.length === 0}
           >
             <Text style={styles.toolIcon}>💾</Text>
-            <Text style={styles.toolText}>Kaydet</Text>
+            <Text style={styles.toolText}>Kaydet ({paths.length})</Text>
           </TouchableOpacity>
         </ScrollView>
       </Animated.View>
@@ -671,43 +503,43 @@ const styles = StyleSheet.create({
     shadowOffset: { width: -2, height: 0 },
     shadowOpacity: 0.3,
     shadowRadius: 5,
-    paddingTop: 100,
-    paddingHorizontal: 20,
-    paddingBottom: 20,
+    paddingTop: 60,
+    paddingHorizontal: 15,
+    paddingBottom: 15,
   },
   selectedColorDisplay: {
     alignItems: 'center',
-    marginBottom: 20,
-    padding: 15,
+    marginBottom: 10,
+    padding: 10,
     backgroundColor: '#f5f5f5',
-    borderRadius: 15,
+    borderRadius: 12,
   },
   selectedColorCircle: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
     borderWidth: 3,
     borderColor: '#333',
-    marginBottom: 10,
+    marginBottom: 8,
     elevation: 3,
   },
   sectionTitle: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold',
     color: '#333',
-    marginTop: 15,
-    marginBottom: 10,
+    marginTop: 10,
+    marginBottom: 8,
   },
   colorGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 10,
-    marginBottom: 20,
+    gap: 8,
+    marginBottom: 10,
   },
   colorBtn: { 
-    width: 45, 
-    height: 45, 
-    borderRadius: 22.5, 
+    width: 38, 
+    height: 38, 
+    borderRadius: 19, 
     borderWidth: 2,
     borderColor: '#ddd',
     elevation: 2,
@@ -725,9 +557,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#2196F3',
-    padding: 15,
-    borderRadius: 15,
-    marginBottom: 10,
+    padding: 12,
+    borderRadius: 12,
+    marginBottom: 8,
     elevation: 3,
   },
   toolButtonDisabled: {
@@ -756,10 +588,10 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   brushSizeContainer: {
-    marginBottom: 20,
+    marginBottom: 10,
     backgroundColor: '#f5f5f5',
-    padding: 15,
-    borderRadius: 15,
+    padding: 10,
+    borderRadius: 12,
   },
   brushSizeHeader: {
     flexDirection: 'row',

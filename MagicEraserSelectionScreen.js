@@ -15,6 +15,18 @@ export default function MagicEraserSelectionScreen({ onSelectImage, onNavigate }
       icon: '✨',
       source: require('./sihirliSilgi/1.resim/3.webp')
     },
+    { 
+      id: 5, 
+      name: 'Resim 5', 
+      icon: '🌟',
+      source: require('./sihirliSilgi/1.resim/5.jpeg')
+    },
+    { 
+      id: 7, 
+      name: 'Resim 7', 
+      icon: '🎭',
+      source: require('./sihirliSilgi/1.resim/7.jpeg')
+    },
   ];
 
   return (
