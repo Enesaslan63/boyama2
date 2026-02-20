@@ -15,6 +15,7 @@ export default function App() {
   const [savedPictures, setSavedPictures] = useState([]);
   const [selectedPicture, setSelectedPicture] = useState(null);
   const [isSoundEnabled, setIsSoundEnabled] = useState(true);
+  const [editingPicture, setEditingPicture] = useState(null);
 
   if (currentScreen === 'home') {
     return (
@@ -45,10 +46,29 @@ export default function App() {
   if (currentScreen === 'animalPainting') {
     return (
       <AnimalPaintingScreen 
-        initialAnimal={selectedAnimal}
-        onNavigate={() => setCurrentScreen('animalSelection')}
+        initialAnimal={editingPicture ? editingPicture.animal : selectedAnimal}
+        initialPaths={editingPicture ? editingPicture.paths : []}
+        onNavigate={() => {
+          if (editingPicture) {
+            // Düzenleme modundan geri dönüyorsa resimlerim sayfasına git
+            setEditingPicture(null);
+            setCurrentScreen('myPictures');
+          } else {
+            // Normal modda hayvan seçme sayfasına git
+            setCurrentScreen('animalSelection');
+          }
+        }}
         onSave={(pictureData) => {
-          setSavedPictures(prev => [...prev, pictureData]);
+          if (editingPicture) {
+            // Düzenleme modunda - mevcut resmi güncelle
+            setSavedPictures(prev => prev.map(pic => 
+              pic.id === editingPicture.id ? { ...pictureData, id: editingPicture.id } : pic
+            ));
+            setEditingPicture(null);
+          } else {
+            // Yeni resim ekleme
+            setSavedPictures(prev => [...prev, pictureData]);
+          }
           setCurrentScreen('myPictures');
         }}
         isSoundEnabled={isSoundEnabled}
@@ -98,6 +118,10 @@ export default function App() {
       <PictureDetailScreen 
         picture={selectedPicture}
         onNavigate={() => setCurrentScreen('myPictures')}
+        onEdit={(picture) => {
+          setEditingPicture(picture);
+          setCurrentScreen('animalPainting');
+        }}
         isSoundEnabled={isSoundEnabled}
       />
     );

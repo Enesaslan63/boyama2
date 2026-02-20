@@ -13,12 +13,6 @@ import { MaymunSiyahCizgiler } from './hayvan/maymun';
 import { FilSiyahCizgiler } from './hayvan/fil';
 import { InekSiyahCizgiler } from './hayvan/inek';
 import { KartalSiyahCizgiler } from './hayvan/kartal';
-import { BalikSiyahCizgiler } from './hayvan/balik';
-import { AyiSiyahCizgiler } from './hayvan/ayi';
-import { BalinaSiyahCizgiler } from './hayvan/balina';
-import { TavsanSiyahCizgiler } from './hayvan/tavsan';
-import { BibalikSiyahCizgiler } from './hayvan/bibalik';
-import { YildizSiyahCizgiler } from './hayvan/yildiz';
 import { TimsahSiyahCizgiler } from './hayvan/timsah';
 import { ZürafaSiyahCizgiler } from './hayvan/zürafa';
 import { PenguenSiyahCizgiler } from './hayvan/penguen';
@@ -67,12 +61,6 @@ export default function AnimalSelectionScreen({ onSelectAnimal, onNavigate, isSo
     { id: 'fil', Component: FilSiyahCizgiler },
     { id: 'inek', Component: InekSiyahCizgiler },
     { id: 'kartal', Component: KartalSiyahCizgiler },
-    { id: 'balik', Component: BalikSiyahCizgiler },
-    { id: 'ayi', Component: AyiSiyahCizgiler },
-    { id: 'balina', Component: BalinaSiyahCizgiler },
-    { id: 'tavsan', Component: TavsanSiyahCizgiler },
-    { id: 'bibalik', Component: BibalikSiyahCizgiler },
-    { id: 'yildiz', Component: YildizSiyahCizgiler },
     { id: 'timsah', Component: TimsahSiyahCizgiler },
     { id: 'zürafa', Component: ZürafaSiyahCizgiler },
     { id: 'penguen', Component: PenguenSiyahCizgiler },

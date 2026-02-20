@@ -13,7 +13,7 @@ export default function FreeDrawScreen({ onNavigate, isSoundEnabled }) {
   const [paths, setPaths] = useState([]);
   const [currentPath, setCurrentPath] = useState([]);
   const [color, setColor] = useState('#FF0000');
-  const [strokeWidth, setStrokeWidth] = useState(10);
+  const [strokeWidth, setStrokeWidth] = useState(50);
   const [isDrawing, setIsDrawing] = useState(false);
   const [canvasLayout, setCanvasLayout] = useState({ width: 0, height: 0 });
   const [isPanelOpen, setIsPanelOpen] = useState(false);
@@ -115,7 +115,7 @@ export default function FreeDrawScreen({ onNavigate, isSoundEnabled }) {
 
   const panelTranslateX = panelAnimation.interpolate({
     inputRange: [0, 1],
-    outputRange: [300, 0],
+    outputRange: [170, 0],
   });
 
   const undoLastPath = () => {
@@ -174,6 +174,9 @@ export default function FreeDrawScreen({ onNavigate, isSoundEnabled }) {
     const svgCoords = convertToSVGCoords(locationX, locationY);
     
     // Performans için: Sadece belirli bir mesafeden sonra nokta ekle
+    // Tablet için daha büyük mesafe (daha az nokta = daha hızlı)
+    const minDistance = screenWidth >= 1024 ? 4 : 2;
+    
     if (currentPath.length > 0) {
       const lastPoint = currentPath[currentPath.length - 1];
       const distance = Math.sqrt(
@@ -181,8 +184,7 @@ export default function FreeDrawScreen({ onNavigate, isSoundEnabled }) {
         Math.pow(svgCoords.y - lastPoint.y, 2)
       );
       
-      // Minimum 3 birim mesafe varsa ekle
-      if (distance < 3) return;
+      if (distance < minDistance) return;
     }
     
     setCurrentPath(prev => [...prev, svgCoords]);
@@ -191,7 +193,7 @@ export default function FreeDrawScreen({ onNavigate, isSoundEnabled }) {
   const handleTouchEnd = () => {
     stopPaintSound();
     if (currentPath.length > 1) {
-      // Bezier curve kullanarak daha pürüzsüz çizgiler
+      // Direkt çizgi kullan (Bezier yerine - daha hızlı)
       const pathString = smoothPath(currentPath);
       setPaths(prev => [...prev, { d: pathString, color: isEraser ? '#FFFFFF' : color, strokeWidth }]);
     }
@@ -199,25 +201,18 @@ export default function FreeDrawScreen({ onNavigate, isSoundEnabled }) {
     setCurrentPath([]);
   };
 
-  // Pürüzsüz path oluştur
+  // Pürüzsüz path oluştur - Performans için optimize edildi
   const smoothPath = (points) => {
     if (points.length < 2) return '';
     
-    let path = `M${points[0].x},${points[0].y}`;
+    // Direkt çizgi çizimi (Bezier yerine) - çok daha hızlı
+    const pathParts = [`M${points[0].x.toFixed(1)},${points[0].y.toFixed(1)}`];
     
-    for (let i = 1; i < points.length - 1; i++) {
-      const xc = (points[i].x + points[i + 1].x) / 2;
-      const yc = (points[i].y + points[i + 1].y) / 2;
-      path += ` Q${points[i].x},${points[i].y} ${xc},${yc}`;
+    for (let i = 1; i < points.length; i++) {
+      pathParts.push(`L${points[i].x.toFixed(1)},${points[i].y.toFixed(1)}`);
     }
     
-    // Son nokta
-    if (points.length > 1) {
-      const last = points[points.length - 1];
-      path += ` L${last.x},${last.y}`;
-    }
-    
-    return path;
+    return pathParts.join(' ');
   };
 
   const currentPathString = currentPath.length > 0 
@@ -278,38 +273,28 @@ export default function FreeDrawScreen({ onNavigate, isSoundEnabled }) {
         </Svg>
       </View>
 
-      {/* Açma/Kapama Butonu */}
-      <TouchableOpacity 
-        style={[styles.toggleButton, isPanelOpen && styles.toggleButtonOpen]} 
-        onPress={togglePanel}
-      >
-        <Text style={styles.toggleIcon}>{isPanelOpen ? '→' : '←'}</Text>
-      </TouchableOpacity>
-
-      {/* Sağdan Açılır Panel */}
+      {/* Sağ Panel - Animasyonlu */}
       <Animated.View 
         style={[
           styles.sidePanel, 
           { transform: [{ translateX: panelTranslateX }] }
         ]}
       >
-        <ScrollView showsVerticalScrollIndicator={false}>
-          {/* Seçili Renk Göstergesi */}
-          <View style={styles.selectedColorDisplay}>
-            <View style={[
-              styles.selectedColorCircle, 
-              { backgroundColor: isEraser ? '#FFFFFF' : color },
-              isEraser && styles.whiteColor
-            ]} />
-            <Text style={styles.sectionTitle}>{isEraser ? 'Silgi Modu' : 'Seçili Renk'}</Text>
-          </View>
+        {/* Panel Açma/Kapama Butonu */}
+        <TouchableOpacity 
+          style={styles.toggleButton}
+          onPress={togglePanel}
+        >
+          <Text style={styles.toggleIcon}>{isPanelOpen ? '→' : '←'}</Text>
+        </TouchableOpacity>
 
+        <ScrollView showsVerticalScrollIndicator={false}>
           {/* Fırça Kalınlığı */}
           <Text style={styles.sectionTitle}>Fırça Kalınlığı</Text>
           <View style={styles.brushSizeContainer}>
             <View style={styles.brushSizeHeader}>
               <Text style={styles.brushLabel}>
-                {strokeWidth <= 5 ? 'Çok İnce' : strokeWidth <= 15 ? 'İnce' : strokeWidth <= 30 ? 'Orta' : strokeWidth <= 50 ? 'Kalın' : 'Çok Kalın'}
+                {strokeWidth <= 30 ? 'İnce' : strokeWidth <= 50 ? 'Orta' : strokeWidth <= 70 ? 'Kalın' : 'Çok Kalın'}
               </Text>
               <Text style={styles.brushSizeValue}>{Math.round(strokeWidth)}px</Text>
             </View>
@@ -318,8 +303,8 @@ export default function FreeDrawScreen({ onNavigate, isSoundEnabled }) {
               <View style={[
                 styles.brushPreviewLarge, 
                 { 
-                  width: Math.min(strokeWidth * 2, 80), 
-                  height: Math.min(strokeWidth * 2, 80),
+                  width: strokeWidth, 
+                  height: strokeWidth,
                   backgroundColor: isEraser ? '#999' : color 
                 }
               ]} />
@@ -327,20 +312,24 @@ export default function FreeDrawScreen({ onNavigate, isSoundEnabled }) {
 
             <Slider
               style={styles.slider}
-              minimumValue={3}
-              maximumValue={80}
+              minimumValue={20}
+              maximumValue={120}
               value={strokeWidth}
               onValueChange={setStrokeWidth}
               minimumTrackTintColor="#2196F3"
               maximumTrackTintColor="#ddd"
               thumbTintColor="#2196F3"
-              step={1}
+              step={5}
             />
           </View>
 
           {/* Renk Paleti */}
           <Text style={styles.sectionTitle}>Renkler</Text>
-          <View style={styles.colorGrid}>
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false}
+            style={styles.colorScrollView}
+          >
             {colors.map((c) => (
               <TouchableOpacity 
                 key={c} 
@@ -357,7 +346,7 @@ export default function FreeDrawScreen({ onNavigate, isSoundEnabled }) {
                 }} 
               />
             ))}
-          </View>
+          </ScrollView>
 
           {/* Araçlar */}
           <Text style={styles.sectionTitle}>Araçlar</Text>
@@ -390,15 +379,6 @@ export default function FreeDrawScreen({ onNavigate, isSoundEnabled }) {
             <Text style={styles.toolText}>Tümünü Temizle</Text>
           </TouchableOpacity>
 
-          {/* Paylaş */}
-          <TouchableOpacity 
-            style={[styles.toolButton, styles.shareButton]} 
-            onPress={() => { playButtonSound(); alert('Resim paylaşılıyor...'); }}
-          >
-            <Text style={styles.toolIcon}>📤</Text>
-            <Text style={styles.toolText}>Paylaş</Text>
-          </TouchableOpacity>
-
           {/* Kaydet */}
           <TouchableOpacity 
             style={[styles.toolButton, styles.saveButton]} 
@@ -406,15 +386,6 @@ export default function FreeDrawScreen({ onNavigate, isSoundEnabled }) {
           >
             <Text style={styles.toolIcon}>💾</Text>
             <Text style={styles.toolText}>Kaydet</Text>
-          </TouchableOpacity>
-
-          {/* Yazdır */}
-          <TouchableOpacity 
-            style={[styles.toolButton, styles.printButton]} 
-            onPress={() => { playButtonSound(); alert('Yazdırma hazırlanıyor...'); }}
-          >
-            <Text style={styles.toolIcon}>🖨️</Text>
-            <Text style={styles.toolText}>Yazdır</Text>
           </TouchableOpacity>
         </ScrollView>
       </Animated.View>
@@ -452,10 +423,10 @@ const styles = StyleSheet.create({
   canvasArea: { 
     flex: 1, 
     backgroundColor: 'white', 
-    marginLeft: screenWidth >= 1024 ? 100 : 150,
-    marginRight: screenWidth >= 1024 ? 100 : 150,
-    marginTop: screenWidth >= 1024 ? 100 : 10,
-    marginBottom: screenWidth >= 1024 ? 100 : 40,
+    marginLeft: screenWidth >= 1024 ? 140 : 150,
+    marginRight: screenWidth >= 1024 ? 140 : 150,
+    marginTop: screenWidth >= 1024 ? 50 : 10,
+    marginBottom: screenWidth >= 1024 ? 50 : 40,
     borderRadius: 20,
     elevation: 4,
     shadowColor: '#000',
@@ -465,40 +436,38 @@ const styles = StyleSheet.create({
   },
   toggleButton: {
     position: 'absolute',
-    right: 0,
+    left: -40,
     top: '50%',
-    backgroundColor: '#4CAF50',
-    width: 40,
-    height: 80,
-    borderTopLeftRadius: 20,
-    borderBottomLeftRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: 'white',
+    padding: 10,
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 10,
     elevation: 5,
-    zIndex: 5,
-  },
-  toggleButtonOpen: {
-    right: 300,
+    shadowColor: '#000',
+    shadowOffset: { width: -2, height: 0 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    zIndex: 11,
   },
   toggleIcon: {
-    fontSize: 24,
-    color: 'white',
+    fontSize: 20,
     fontWeight: 'bold',
+    color: '#333',
   },
   sidePanel: {
     position: 'absolute',
     right: 0,
     top: 0,
     bottom: 0,
-    width: 300,
+    width: 170,
     backgroundColor: 'white',
     elevation: 10,
     shadowColor: '#000',
     shadowOffset: { width: -2, height: 0 },
     shadowOpacity: 0.3,
     shadowRadius: 5,
-    paddingTop: 100,
-    paddingHorizontal: 20,
+    paddingTop: screenWidth >= 1024 ? 20 : 2,
+    paddingHorizontal: 12,
     paddingBottom: 20,
   },
   selectedColorDisplay: {
@@ -557,19 +526,17 @@ const styles = StyleSheet.create({
     color: '#666',
     fontWeight: 'bold',
   },
-  colorGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 10,
+  colorScrollView: {
     marginBottom: 20,
   },
   colorBtn: { 
-    width: 45, 
-    height: 45, 
-    borderRadius: 22.5, 
+    width: 40, 
+    height: 40, 
+    borderRadius: 20, 
     borderWidth: 2,
     borderColor: '#ddd',
     elevation: 2,
+    marginRight: 8,
   },
   whiteColor: {
     borderColor: '#999',

@@ -14,18 +14,12 @@ import { MaymunSiyahCizgiler } from './hayvan/maymun';
 import { FilSiyahCizgiler } from './hayvan/fil';
 import { InekSiyahCizgiler } from './hayvan/inek';
 import { KartalSiyahCizgiler } from './hayvan/kartal';
-import { BalikSiyahCizgiler } from './hayvan/balik';
-import { AyiSiyahCizgiler } from './hayvan/ayi';
-import { BalinaSiyahCizgiler } from './hayvan/balina';
-import { TavsanSiyahCizgiler } from './hayvan/tavsan';
-import { BibalikSiyahCizgiler } from './hayvan/bibalik';
-import { YildizSiyahCizgiler } from './hayvan/yildiz';
 import { TimsahSiyahCizgiler } from './hayvan/timsah';
 import { ZürafaSiyahCizgiler } from './hayvan/zürafa';
 import { PenguenSiyahCizgiler } from './hayvan/penguen';
 
 const SVG_VIEW_WIDTH = 1024;
-const SVG_VIEW_HEIGHT = 1536;
+const SVG_VIEW_HEIGHT = 1024;
 
 // Aslan figürünün ana path'i - boyama için maske
 const ASLAN_GOVDE_YOLU = "M602.5 199.7c-32 2.8-64.1 15.6-86.4 34.6l-5.4 4.6-4.6-3.8c-18-15-42.5-24.9-68.8-27.6-8.6-.9-19.5 1-22.7 4-3.1 2.9-3.2 5.5-.6 14.3 3.1 10.3 5.9 24.2 4.9 24.2-.5 0-5.3-.8-10.7-1.7-15.8-2.7-45.8-2.2-64.2 1-44.6 7.9-75.5 23.3-104.1 51.7-19.9 19.8-34.8 40.8-47.9 67.5-7.4 15.2-12 27.8-12 33.1 0 2.5.7 3.8 2.6 5 2.4 1.6 3.1 1.6 12.7-.5 5.6-1.2 13.3-2.4 17.1-2.8l7-.6-7.8 8.9c-24.3 27.7-42 65.5-48.6 103.3-3.8 21.7-3.2 51.6 1.4 62.5 2.7 6.6 6.1 5.9 23.6-4.3 4.6-2.8 8.5-4.9 8.7-4.7.2.1-.6 2.9-1.7 6.2-10.8 31.1-11.7 67.8-2.4 100.2 3.9 13.7 12.2 29.8 19.1 37.1 3.7 3.8 6.7 6.1 8 6.1 3.4 0 6.8-1.9 8.6-4.8.8-1.5 3.9-6 6.7-10l5.2-7.4 2.8 8.1c8.9 25.8 30.5 51.7 56.4 67.8 16.8 10.4 40.8 19.3 52.1 19.3 6.4 0 7.1-1.5 7.9-15.5.4-6.6.9-13.5 1.3-15.3l.6-3.4 4.1 4c35.7 34.3 93.2 60.8 138.1 63.8 18.2 1.2 22.6-1.7 33.3-22.1 3.4-6.6 7.1-13.1 8.1-14.4 2.1-2.8 1.6-3 17.5 7.1 25.9 16.7 36.1 18.2 63.1 9.6 21.9-6.9 46.1-21.8 64.6-39.5 5.4-5.3 9.9-9.3 9.9-9 0 .2 1.4 6 3.1 12.8 4.7 19 6.7 20 22.6 11.9 25.4-13 49.5-35.9 63.8-60.8 4.8-8.2 12.5-28.6 12.5-33 0-1.2.3-2.2.8-2.2.4 0 5 4.3 10.2 9.5 11.2 11.2 13.6 12 18.9 5.9 7.2-8.2 17.9-34.8 22.2-54.9 8.3-40 6-80.8-6.6-116.8-1.9-5.3-3-9.7-2.4-9.7.5 0 6.6 1.6 13.4 3.6 11.1 3.1 12.8 3.4 15.2 2.2 4.7-2.2 5.5-5.1 4.8-16.8-2.8-46.5-27.6-105.1-59.1-139.4-2.5-2.6-4.4-4.9-4.2-5.1.2-.1 4.6-1 9.8-1.9 17.9-3.2 20-4.3 20-10.1 0-2.4-1.4-5.4-4.7-10.2-20.7-30.3-58.2-61.5-96.4-80.4-22.4-11.1-51.3-20.4-69.8-22.4l-6.3-.7 8.6-8.7c7-7.1 8.6-9.2 8.6-11.7 0-4.4-3.1-6.7-13.5-9.7-24.4-7.2-47.1-9.8-69-8z";
@@ -54,23 +48,6 @@ const INEK_GOVDE_YOLU = "M382.5 270.5c-7.7 4.1-13.1 12.5-16 24.7-1.9 8.1-1.9 27.
 // Kartal figürünün ana path'i - boyama için maske
 const KARTAL_GOVDE_YOLU = "M487 260.1c-30.3 3.5-57.5 11.9-89.5 27.6-6.7 3.3-13 6.2-14.2 6.5-2.5.7-4.1 5.3-2.6 7.7 1.7 2.7 5.7 5 11.2 6.4l5.4 1.4-6.9 4.9c-25.3 17.8-48.3 42.4-71.9 76.9-4.9 7.1-11.2 16-14.1 19.6-4.6 5.8-7.3 8.6-17 17.6-2.9 2.7-3.2 7.3-.6 9.6 4.6 4.2 9.2 5.2 24 5.1 7.8 0 14.2.3 14.2.7 0 2-11.1 27.9-17.1 39.9-13 26-30.6 48.5-45 57.5-6.3 4-6.2 9.7.1 13 4.2 2.2 18.2 3.8 26.5 3 14.6-1.4 27.8-4.7 40.4-10 3.5-1.4 6.5-2.5 6.7-2.3.2.2-2.7 4.4-6.3 9.3-8.6 11.6-21.3 24.3-28.6 28.4-7.2 4.1-8.3 6-5.6 9.5 2.5 3.2 13.9 6.9 30.4 9.9 10.4 1.9 15.7 2.1 39.5 2.1 30.4 0 38.8-1.1 56.2-7.4 4.5-1.7 8.6-3 9.1-3 1.7 0-1.7 3.3-9 8.7-4.6 3.4-7.3 6.1-7.3 7.3 0 6.5 15 9.5 46.5 9.5 23.4-.1 31.6-1 46.5-5.2 6.9-1.9 22.5-8.1 26.5-10.4l2.9-1.8 17.1 16.7c24.3 23.9 41.7 38.2 46.5 38.2 4.4 0 8.7-4.4 13.1-13.5 3-6.2 4.3-10.6 5.2-16.9.6-4.7 1.5-8.6 2-8.6 1.8 0 13.4 9 21.9 17 5.2 4.8 11.1 11.6 14.4 16.6 5.1 7.7 5.9 8.4 8.9 8.4 2.7 0 4.1-.9 7.5-4.7 12.3-14 20.7-40.5 19.8-62.8l-.3-9 15-.6c17.6-.7 25.9-2.8 35.2-8.8 7.1-4.6 10.3-8.4 10.3-12.2 0-3.4-2-5.5-6.2-6.4-23.4-5.1-54.3-47.9-52.6-73l.3-5 8.5-4.2c10.4-5.1 26.6-10.6 38-12.8 4.7-.9 15.8-1.9 24.6-2.2l16.2-.6 2.7 4.1c3.1 4.8 5.5 12.1 5.5 17.2 0 4.5 1.4 6 5.7 6 5.9 0 12.9-7.9 20.4-23.1 5.5-11.1 7.1-19.4 7.2-37.4 0-17.1-1.2-23.9-6.6-35.6-17-36.7-50.9-57.6-100-61.7-5.9-.5-10.8-1.1-11-1.3-13.3-21.1-30.5-33.8-62.4-46.4-24.4-9.6-58.7-17.1-88.7-19.5-15.1-1.2-57.8-1.1-68.6.1z";
 
-// Balık figürünün ana path'i - boyama için maske
-const BALIK_GOVDE_YOLU = "M277.8 2.6c-3.5 1.8-4.8 4.3-4.8 8.8 0 6.1 4.7 23.9 12.1 45.9 3.8 11.5 6.6 21.4 6.2 21.8-.5.5-7.9 3.3-16.4 6.3-45.4 15.7-90.1 37.5-125.1 61l-5 3.4-8.9-7.4c-24.7-20.5-58.5-38.6-104-55.8C10 78.4 5.9 78.1 2 84.5l-2 3.3 2 6.5c4.2 13.6 15.2 37.6 25.8 56.2 7.5 13.2 17.5 27.4 26.7 37.8L63 198l-7.8 9.8c-9.5 11.7-19.1 25-25.4 35.2-12 19.5-27.2 52.3-28.4 61.4-.6 3.9-.3 4.8 2 7.1 2.5 2.5 3.3 2.7 8.4 2.3 7-.6 26.4-7.5 51.2-18.4 12.5-5.4 38.6-19 48.9-25.4 5.7-3.6 14.8-10.2 20.2-14.8 5.5-4.5 10.6-8.2 11.4-8.2.7 0 7.7 4.1 15.5 9 28.9 18.5 56.5 32.7 86.5 44.5 9.4 3.7 17.2 6.9 17.4 7.1.2.2-2.1 7.2-5.2 15.6-10.2 28.3-14 42.9-13.5 51.3.3 4.3.7 5.2 3.8 7.3 4.2 2.8 5.7 2.5 20.5-3.6 22.1-9.3 54.5-26.3 78-41l12-7.5 12.5 1.1c15.4 1.5 49.6 1.5 65 .2 15.7-1.4 29.5-4.1 50.8-9.9 47.6-13.1 88.8-36.4 123.6-70.1 19.2-18.6 31.3-35.4 35.2-48.6 1.4-4.9 1.4-5.9 0-10.7-.8-2.9-3.7-8.8-6.3-13.2-31.3-52.1-96.9-95.2-167-109.9-19.7-4.1-33.3-5.7-55.7-6.5l-21.3-.7-6.9-5c-25.6-18.5-61.1-37.6-92.9-50.2-12.8-5-14.4-5.4-17.7-3.6z";
-
-// Ayı figürünün ana path'i - boyama için maske
-const AYI_GOVDE_YOLU = "M65 1.9C48.3 5.8 36.9 12.1 24.5 24.5c-12 12-17.8 22.1-22.2 38.6-2.3 8.8-2.3 29 0 37.8 2.3 8.5 5.8 16.9 9.8 23.9 4.5 7.5 19.9 22.9 27.2 27.1 3.1 1.8 5.7 3.7 5.7 4.3 0 .5-.9 4.4-2 8.6-7 27.5-7.7 59.7-2 87.8 4.7 22.7 16.3 49.4 29.8 68.4 8.2 11.6 27.6 31.3 39.6 40.2 71.2 52.9 177.8 53.1 249 .4 33.4-24.7 57-59.2 67.6-98.8 8.3-31.3 8.2-69.5-.5-101.8-.8-3-1.3-5.5-1.2-5.5.1-.1 3.6-2.3 7.7-5 43.3-27.7 49.8-89.8 13.2-126.3-32-32-85-31.9-116.1.1l-4.3 4.5-9.7-4.7c-25-12.4-47-17.9-75.1-18.8-31.4-1-61.3 5.5-87.8 19.2l-8.2 4.2-6.1-5.8C119.6 4.3 90.5-4 65 1.9z";
-
-// Balina figürünün ana path'i - boyama için maske
-const BALINA_GOVDE_YOLU = "M71.5 84.9c-7.7 3.5-13.4 11.5-13.5 18.8 0 4.7 1.6 4.9 6 .9 12.7-11.5 27.9-3.9 28 14v6.1l-7.5.7c-19.9 1.8-32.9 7.7-46.1 21C24.6 160.2 19 173.3 19 191.6c0 26.7 15.9 53.2 39.2 65 13.2 6.7 34.1 10 56.8 9 15.1-.6 25-2.2 33.5-5.2 3.7-1.3 8.4-1.8 18-2 14.7-.2 36-2.8 41.4-5 9.5-4 10.6-9.3 3.3-16.4l-4.7-4.6 5.6-6.7c14.4-17.1 22.5-43.6 19.9-64.6-1-7.2-.9-7.6 1.4-10 1.4-1.5 3.5-4.9 4.8-7.6 4.5-9.8 2.3-28.4-4.3-36.9-2.9-3.7-5.4-3.2-10.9 2.3-5.4 5.4-8.1 10-10.5 18.4l-1.6 5.7h-5.3c-4 0-6.2.6-9.7 2.8-5 3.3-12 10.5-14.3 15-2 4-.7 5.6 6.9 8.4 5 1.9 8 2.3 18.1 2.3h12.2l-.9 2.3c-2.7 7.2-8.3 14.3-13 16.8-3.8 1.9-10.6 1.7-15.4-.5-6.2-2.8-15.5-10.2-29.3-23.4-7-6.6-14.9-13.8-17.7-16-7.2-5.7-17.7-10.6-27.9-13.2l-9-2.2.2-4.4c1-14.6 7.5-22 18.1-20.4 4.7.7 11.1 3.9 11.1 5.6 0 .5.7.9 1.5.9 2.2 0 1.9-4.7-.9-10.5-2.8-6-5.6-8.7-11.6-11.4-7.9-3.6-16.1-2.5-23.3 3.1l-3.9 3-1.5-2.2c-3.9-5.5-16.1-7.6-23.8-4.1z";
-
-// Tavşan figürünün ana path'i - boyama için maske
-const TAVSAN_GOVDE_YOLU = "M122.5 28.3c-13.6 4.6-23.9 14.7-32.6 32-5.1 10.1-7.2 15.9-10.3 28.7-5.1 21.1-7.7 57.9-5.7 81 .6 6.9 1.3 15.6 1.6 19.5 1.4 16.2 7.6 44.9 16.7 76 9.7 33.5 16.4 50.8 30.8 79.5 19.2 38.3 27.8 53 44.3 75.4 8 10.9 24.6 31.1 30.4 37.1l2.9 3L189 472c-13.9 14-21.7 23.5-32.6 40-14.7 22.3-24.5 42.3-32.3 65.7-7.3 21.7-13.6 50.2-16.1 72.8-1.7 14.8-4.2 25.3-10.9 45.7-5.1 15.3-8.2 26.9-10.7 39.5-.4 2-1.2 2.1-11.1 2.7-19.4 1.1-32.7 2.7-35.1 4.2-2.5 1.6-2.9 5.5-.8 7.4 1.3 1 10.7.7 12.6-.5.3-.2 7.8-.6 16.8-1l16.2-.7-.2 7.3c-.2 9.1 2.7 28.7 5.7 39.2 1.5 5.4 1.9 8 1.1 8.2-.6.2-6.3 2.3-12.6 4.6-20 7.2-23.7 9.9-21 15 1.5 2.7 3 2.4 19.5-3.9 19.9-7.7 17.5-8.1 23.5 4 14.6 28.9 39.1 55.3 68 73 39.4 24.1 107.7 44.2 168.1 49.3 33.3 2.8 39.1 3 65.4 2.4 43.2-1 92.6-9 137-22.1 49.6-14.6 98.4-49.9 125.6-90.8 3.5-5.3 7.7-12.4 9.3-15.8 1.6-3.4 3.3-6.2 3.8-6.2.7 0 19.2 6.9 31.6 11.8 5 1.9 7.5 1 8-3 .2-1.8-.4-3-2.1-4.1-3.4-2.2-21.9-10-29-12.3-4.4-1.4-5.6-2.1-5.1-3.3 2.5-6.4 6.5-30.8 6.7-40.8.1-10.7.3-11.2 2.2-10.8 1.1.2 5.2.6 9 .9 3.9.3 12.7 1.3 19.7 2.3 10.4 1.3 13 1.4 14.2.3 2-1.6 2.1-5.4.2-6.9-1.5-1.2-12-2.8-33.7-5.2l-11.7-1.2-.6-4.4c-1.2-8.9-5.9-26.1-10.7-38.8-6.7-18.1-8.5-25.5-10.8-44.5-1.1-9.1-2.3-17.6-2.5-19-.3-1.4-.7-4.2-1-6.2-.3-2.1-1.1-5.9-1.7-8.5-.6-2.7-1.3-5.9-1.5-7.3-4.8-25.5-18.4-60.5-32.9-84.5-16.8-27.9-31.2-45.7-48.8-60.6l-5.8-4.9 2.7-2.2c6.7-5.9 35.5-42.7 45.8-58.7 17.2-26.5 42.6-79 52-107.2 10.3-31 20-68.8 22.6-87.9.6-4.7 1.5-11 2-14 1.6-8.9 1.9-14.3 2.6-37.5 1.6-52.8-8.5-92.9-28.6-113.5-14-14.3-30.5-16.7-51.2-7.2-15 6.9-38.6 27.5-53.6 46.8-10.8 13.9-27.5 38.6-35.7 52.9-7.4 12.7-22.4 42.9-25.9 51.7-1.4 3.8-3.8 9.8-5.2 13.4-6.5 16.3-18.7 58.4-20.8 71.4-1 6.1-1.6 9.4-2.2 12-.3 1.4-.8 3.6-1 5-.2 1.4-.9 4.5-1.4 7-1.5 6.6-4.9 31.9-6.1 44.5-1.7 19.4-2.1 38.5-1 56.5.5 9.6.8 17.6.7 17.8-.2.1-3.9-.9-8.3-2.3-12.8-4-30.5-7.2-50.8-9.2-2.7-.3-13.3-.5-23.5-.6-25.3 0-43.6 2.2-65.5 7.8-7.1 1.9-13.7 3.7-14.6 4-1.5.5-1.6.1-.9-3.7.5-2.4 1.3-11.5 2-20.3 1.7-23.1-.4-57.2-5.5-89-.2-1.1-.9-5.4-1.5-9.5s-1.5-9.1-2-11c-.5-1.9-1.1-4.6-1.4-6-6.8-37.3-22.3-82.7-40.6-119.1-11.2-22.4-16-30.9-27.7-48.7-26-39.6-54.2-66.3-78.3-74.2-8.2-2.7-21.1-3.5-26.5-1.7z";
-
-// Köpekbalığı figürünün ana path'i - boyama için maske
-const BIBALIK_GOVDE_YOLU = "M444.5 24.1c-13.1 2-29.5 9.2-46.4 20.3-5.3 3.5-20.6 14.4-34.1 24.2-45.7 33.2-66.6 46.6-95.5 61.5-45.2 23.3-84.4 35-155.4 46.5-39.6 6.4-61.1 13.9-74.2 26.2-3.6 3.3-7.7 8.3-9.2 11-10.6 19.4-6.4 46.7 11.8 76.7 12.6 20.7 25.2 36.2 49.9 61.3 18.6 18.9 27.1 26.8 72.1 67.2 35.6 32 52.3 47.9 64.3 61.3 21.7 24.1 30.1 36.3 44.7 64.7 12.6 24.4 17.7 32.2 25.9 39.7 7.9 7.1 15.2 11.6 24.8 15.1 6.5 2.4 8.8 2.7 20.6 2.8l13.4.1 4.7 11.4c11 26.4 20 43.3 35.7 66.9 13.6 20.6 21.2 30 36.8 45.5 43.5 43.1 90.5 66.8 151.6 76.2 14.2 2.2 53.7 2.5 67.5.5 52.5-7.5 96.2-27.1 137-61.4 11.1-9.3 30.7-29.4 39.8-40.8 36.5-45.5 61.3-107.2 71.6-178 3.8-25.8 5.4-45.3 7.6-90.5 1.7-34.6 3.3-50.7 7.1-73.5 6.6-40 18.8-73 36.3-99 7.9-11.7 8.7-15.1 4.8-18.8-3.3-3.1-6.7-2.7-12.7 1.3-26.6 17.9-51.8 54.1-64.4 92.4-8.3 25.4-12.1 47-17.6 100.1-3.5 33.3-6.9 58.3-10.6 77.5-15.9 82.5-50 142.4-104.5 183.5-46.2 34.8-96.5 46.8-150.4 35.9-29.3-5.9-57.9-20.8-77.9-40.6-15.8-15.5-29.7-37.1-36.6-56.8-3.2-9.2-8-26.8-8-29.5 0-1.2 1.4-1.4 8.2-1.2 14.2.6 27-3.6 39.2-12.8 6.7-5.1 10.7-10 23.1-27.9 11.6-16.8 22.7-29.7 35.7-41.2 24-21.2 45-35.2 119.8-79.8 44.6-26.5 75.7-49.7 102.1-76.1 24.8-24.8 34.3-40.9 35.6-60.6 2.1-31.3-19.1-48.9-89.2-74-57.5-20.5-91.3-39-129.9-71.2-20.9-17.4-35.5-32-65.1-65.2-28.6-32.1-41.4-45.1-53-53.8-7.9-6-24.6-14.4-31.7-16.1-7-1.6-18.4-2.1-25.3-1z";
-
-// Yıldız figürünün ana path'i - boyama için maske
-const YILDIZ_GOVDE_YOLU = "M260.3 30c-5.6 2.9-8.9 7.5-17.7 25-14.9 29.6-25.5 59.5-39.1 110.6-7.3 27.5-9.8 31.9-20.7 36.1-6.5 2.6-40.3 2.3-59.6-.6-25.2-3.6-49.9-10.7-72.4-20.6-10.6-4.7-16.7-5.6-21.1-3.4-7 3.6-9.6 9.9-7.6 18.2 2.5 10.7 22 34.4 42.2 51.5 13.8 11.7 43.5 31.9 69.7 47.3 21.4 12.6 24.4 21.5 15.4 45.8-9.2 24.6-27.2 54-58.5 95.6-9.5 12.6-18.1 24.7-19.1 26.7-2.2 4.5-2.3 10.9-.3 14.7.8 1.7 3.4 3.8 6.1 5.1 7 3.4 11.7 2.4 28.5-6 29.3-14.6 61.3-35.6 106.4-69.4 27.9-21 32.1-23.3 40.1-22.1 5 .7 11.9 5.2 31.9 20.6 33.7 26 67.4 48.3 90.7 60 31.8 16 51.8 15 51.8-2.4 0-5.5-2.7-9.7-15.3-24-29-32.9-52.7-71.4-63.2-102.8-3.9-11.8-4.6-20.4-2.1-26.4 5.3-12.6 49-39.3 121.1-73.7 18.9-9 20.3-10.2 22.5-17.8 1-3.6-.3-8.8-3.1-12.4-3.3-4.3-8.6-6.3-19.4-7.4-26.1-2.8-47-2.5-102.5 1.8-29.3 2.3-44.5 2.5-50.4.8-9.3-2.8-14.9-12.1-20.6-34.4-6.9-26.5-10-55.2-11.6-104.7-.5-18.4-.9-21.2-2.8-24.9-4.1-8.1-11.6-10.7-19.3-6.8z";
 
 // Timsah figürünün ana path'i - boyama için maske
 const TIMSAH_GOVDE_YOLU = "M588 266.9c-4.7 1.1-11.4 3-15 4.4-3.8 1.5-10 2.8-14.5 3.2-7 .6-9 .3-16-1.9-24.9-7.9-48.7-8.7-66.2-2.1l-6.5 2.5-10.6-1.6c-7.6-1.2-14.2-1.5-22.7-1.1-21.4 1-33.4 6.3-48.2 21.3-10.9 11.1-10.5 11-28.6 6.5-17-4.3-26.5-5.5-38-4.7-10.7.7-16.7 2.7-20.2 6.6-1.7 1.8-2 3.5-1.9 9.9.1 8.7 2.5 16.1 8 24.2 1.9 2.8 3.4 5.2 3.4 5.3 0 .4-16.9-.6-31.5-2-25.5-2.5-46.4-.3-56.1 5.7-11 6.8-7.6 21.7 8.6 38l8.7 8.6-6.1.7c-3.4.4-15.3 1.1-26.6 1.6-27.7 1.2-43 4.5-55.4 12.1-6.2 3.7-8.6 7.2-8.6 12.6 0 8.9 12.7 22.8 27.7 30.6l8.2 4.2-7.5 2.7c-4.1 1.5-12.1 3.7-17.7 4.8-20.1 4.1-30.7 7.4-42.2 13.2-18.3 9.2-23.5 18.3-16.2 28 3.9 5.2 15.2 13 22.4 15.4 2.9 1 5.3 2.1 5.3 2.4-.1.5-5.1 4.3-11.5 8.7-9.9 6.7-13.7 19.3-10.1 33.1 11.7 43.7 78.2 89.7 159.5 110.2 86.9 21.9 168.9 15.8 225.9-17 6.4-3.7 17.1-10.4 23.7-15 6.6-4.6 15.1-10 19-12.1 19.5-10.5 49.3-11.7 110.5-4.3 47.5 5.7 48.4 5.7 73 5.7 52.7.1 99.9-11.2 130.2-31.1 9.7-6.4 21.7-17.7 26.8-25.5 8.4-12.5 10.3-28.4 4.7-38-5.1-8.6-17.5-17.2-26.6-18.4-2.3-.3-4.1-.8-4.1-1.2 0-.3 2.6-1.9 5.8-3.5 3.6-1.9 9-6.3 14.6-11.9l8.9-8.9-.6 5.2c-1 8.1 1.1 11 7.8 11 13.9 0 37.3-27.8 46.5-55 2.7-8 5-21.5 5-29.6 0-23.4-10.7-46.3-27.7-59.6-19.1-14.8-37.3-21.1-60.8-21.2-19.5 0-36.7 4.6-50.6 13.5l-6.2 4.1h-18.6c-14.4.1-21.8-.4-32.6-2-14.7-2.3-32-6.5-41.8-10.2-9.4-3.5-14.7-9.3-14.7-15.9 0-5.3-4.8-18.4-9.5-26.1-17.1-27.8-51.7-43-82.5-36.1z";
@@ -81,8 +58,8 @@ const ZÜRAFA_GOVDE_YOLU = "M401 144.9c-11 3.5-20.5 11.2-25.3 20.3-5.5 10.5-5.8 
 // Penguen figürünün ana path'i - boyama için maske
 const PENGUEN_GOVDE_YOLU = "M496.5 182.7c-45.2 3.6-82.5 17.7-117.5 44.4-26.5 20.1-49.9 51.4-63.8 85.4-9.9 24-15.5 47-20.2 82.5-.6 4.6-1.7 10-2.4 12-2.7 7.8-12.9 23.3-44.7 67.7-22.1 30.9-31 44.6-39.9 61.8-2.9 5.5-5.6 10.4-6 11-.4.5-2.3 4.8-4.3 9.5-9 22.2-6.8 35.5 6.7 39.4 6.7 2 8.8 2 18.1.1 13.4-2.8 39.1-15.9 45.9-23.4 1.8-2 5.3-3 4.2-1.2-.3.4-1.3 7.7-2.2 16.2-4.2 39.7 3.8 74.1 24.3 104.7 12.2 18.2 30.2 34.2 54.8 48.7 4.4 2.6 9.1 5.1 10.4 5.6 2.3.9 2 1.2-3.9 4-23.3 11-32.2 31.7-18.7 43.6 4.3 3.8 12.6 5.8 20.5 5 4.1-.4 5.4-.2 5.9.9 1 2.6 8.7 6.3 15.4 7.3 7.1 1.2 13.9.4 20.5-2.4 3.4-1.4 4.1-1.4 8.3.2 3.1 1.2 7.4 1.8 13.2 1.8 7.8 0 9.1-.3 16.1-3.8 9.4-4.6 17.6-13.1 20.9-21.7l2.3-5.6 5 .7c23.9 3.6 70.7 3.6 93.4 0l5.2-.8 3 6.5c4.4 9.5 14.3 18.8 23.8 22.4 8.7 3.4 15.9 3.6 24.1.8 5.8-1.9 5.8-1.9 11.2.1 3.8 1.5 7.9 2.1 13.9 2.2 7.3.1 9.2-.3 13.7-2.6 2.8-1.5 5.8-3.5 6.5-4.4 1.1-1.5 2.9-1.8 10.3-1.8 11.2-.1 17.2-2.6 21.3-8.9 3.2-5.1 3.6-13.2.9-18.8-3.2-6.4-12.6-15-21.3-19.4l-8-4.1 7.5-3.9c32.7-17.1 59.3-43.7 71.9-71.9 12.7-28.5 16.3-61.7 10.6-97.8l-.6-3.9 10.5 7.1c12.6 8.5 29.2 16.2 40 18.6 17.5 3.9 28.5-1.9 29.5-15.5.5-6.9-3.2-20.7-8.5-32-6.6-13.7-21.2-38-35.8-59.1-6.1-8.9-21.1-30.3-24.7-35.3-6.4-8.9-28.4-42-30.1-45.2-.9-1.6-2.1-7.7-2.7-13.5-6.8-63.2-23.7-105.6-57.3-143.7-23.5-26.7-51.6-45.4-87.3-58-26.5-9.5-61-13.9-89.9-11.5zm49.5 10.8c43.7 6.6 84.8 27.4 114.4 57.8 7.1 7.3 20.3 23.8 25.3 31.5 16.6 25.9 29.5 62.9 33.7 97.2 3.8 30.4 3.6 29.8 12.3 43.4 2.5 3.9 5.5 8.7 6.6 10.6 1 1.9 3.2 5.3 4.8 7.5 7.6 10.2 30.7 43.4 47.1 67.5 22.8 33.5 36.2 64.1 32.8 74.5-2.1 6.3-11.1 7-25.4 1.8-11.8-4.2-29.9-14.4-33.6-18.8-.7-.9-2.5-2.2-3.9-3-1.4-.7-5.1-3.9-8.1-7-6.9-7-8.4-7.9-11-6.5-2.5 1.3-2.5 3.2-.1 12.3 4.2 15.7 5.5 26.6 5.5 45.2 0 15.8-.3 19.7-2.8 31.5-4.6 22.3-12.7 39.9-26.4 57-8 10.1-13.6 15.2-27.2 25.4-13.1 9.8-40.5 24-57.8 30-55.5 19.2-120.6 24.2-184.2 14-39.1-6.2-78.2-20.7-105.8-39.1-29-19.4-50.3-48.5-58.4-79.7-6.1-23.5-6.4-50.8-.9-77.9 1.8-8.7 3-16.4 2.7-17.2-.3-.8-1.7-1.5-3.1-1.5-1.9 0-4.1 1.7-8.3 6.1-6.5 7-22.2 18.3-33.2 23.8-15.9 8.1-30.3 10.7-36.3 6.8-2.4-1.6-2.7-2.3-2.7-7.5 0-10.7 10-34.2 23-53.7 1.4-2.2 4.5-7.2 6.8-11 4.7-7.7 8.2-12.8 22.9-33.2 28.5-39.6 37.5-53 43.8-65.4 3.4-6.7 3.6-7.7 8.1-35.9 2.1-13.3 5.8-30.1 9.1-41 5.6-18.6 17.4-44.5 25.6-56.3 2.3-3.3 6.2-9 8.7-12.6 10.3-15.2 35.6-38 54.5-49.3 26.8-16 58.9-26.2 91.5-29.2 8.9-.8 39.7.4 50 1.9zM381.5 756.6c13.4 5.9 43.8 14.4 60.5 16.9 7.7 1.1 7.9 1.3 7 4.4-2.1 7.3-10.4 15.7-19 19.2-1.9.8-6.4 1.4-10 1.4-6.2-.1-8.8-.9-14.2-4.7-1.4-1-2.8-.7-7.5 1.6-11.7 5.8-24.8 4.3-27.9-3-1.6-3.7-4.4-5-7.4-3.4-1.2.6-4.9 1.2-8.3 1.3-15.4.3-19.1-9.6-8-21.4 6-6.4 9.7-8.6 20.2-12 4.7-1.5 8.7-2.8 8.7-2.8.1-.1 2.8 1.1 5.9 2.5zm276.7.3c10.9 3.7 12.2 4.4 18.6 10.5 6.3 5.9 8.2 9.2 8.2 14.1 0 8-10.9 11.6-22.3 7.3-3.6-1.4-7.4.2-7.9 3.4-.5 3.6-7.8 6.8-15.4 6.8-4.8 0-7.4-.6-12-3-3.2-1.6-6.4-3-7.1-3-.7 0-2.8 1.1-4.8 2.4-12.3 8.4-33.1-.3-40-16.7l-1.4-3.4 11.7-2.2c15.9-3 28.4-6.3 42.7-11 9.3-3.1 20.4-7.3 21.1-8 0-.1 3.9 1.2 8.6 2.8z";
 
-export default function AnimalPaintingScreen({ onNavigate, onSave, initialAnimal = 'aslan', isSoundEnabled }) {
-  const [paths, setPaths] = useState([]);
+export default function AnimalPaintingScreen({ onNavigate, onSave, initialAnimal = 'aslan', initialPaths = [], isSoundEnabled }) {
+  const [paths, setPaths] = useState(initialPaths);
   const [currentPath, setCurrentPath] = useState([]);
   const [color, setColor] = useState('#FF0000');
   const [strokeWidth, setStrokeWidth] = useState(50);
@@ -95,6 +72,14 @@ export default function AnimalPaintingScreen({ onNavigate, onSave, initialAnimal
   const [isEraserHovered, setIsEraserHovered] = useState(false);
   const [buttonSound, setButtonSound] = useState(null);
   const [paintSound, setPaintSound] = useState(null);
+  
+  // Zoom ve pan için state'ler
+  const [scale, setScale] = useState(1);
+  const [translateX, setTranslateX] = useState(0);
+  const [translateY, setTranslateY] = useState(0);
+  const [isPinching, setIsPinching] = useState(false);
+  const [initialDistance, setInitialDistance] = useState(0);
+  const [initialScale, setInitialScale] = useState(1);
 
   useEffect(() => {
     // Ses dosyasını yükle
@@ -185,7 +170,7 @@ export default function AnimalPaintingScreen({ onNavigate, onSave, initialAnimal
 
   const panelTranslateX = panelAnimation.interpolate({
     inputRange: [0, 1],
-    outputRange: [300, 0],
+    outputRange: [170, 0],
   });
 
   const undoLastPath = () => {
@@ -217,31 +202,66 @@ export default function AnimalPaintingScreen({ onNavigate, onSave, initialAnimal
     
     const scaleX = canvasLayout.width / SVG_VIEW_WIDTH;
     const scaleY = canvasLayout.height / SVG_VIEW_HEIGHT;
-    const scale = Math.min(scaleX, scaleY);
+    const baseScale = Math.min(scaleX, scaleY);
     
-    const scaledWidth = SVG_VIEW_WIDTH * scale;
-    const scaledHeight = SVG_VIEW_HEIGHT * scale;
+    const scaledWidth = SVG_VIEW_WIDTH * baseScale;
+    const scaledHeight = SVG_VIEW_HEIGHT * baseScale;
     const offsetX = (canvasLayout.width - scaledWidth) / 2;
     const offsetY = (canvasLayout.height - scaledHeight) / 2;
     
-    const svgX = (x - offsetX) / scale;
-    const svgY = (y - offsetY) / scale;
+    // Zoom ve pan'i hesaba kat
+    const svgX = ((x - offsetX - translateX) / (baseScale * scale));
+    const svgY = ((y - offsetY - translateY) / (baseScale * scale));
     
     return { x: svgX, y: svgY };
   };
+  
+  const getDistance = (touches) => {
+    const dx = touches[0].pageX - touches[1].pageX;
+    const dy = touches[0].pageY - touches[1].pageY;
+    return Math.sqrt(dx * dx + dy * dy);
+  };
 
   const handleTouchStart = (event) => {
-    const { locationX, locationY } = event.nativeEvent;
-    const svgCoords = convertToSVGCoords(locationX, locationY);
-    playPaintSound();
-    setIsDrawing(true);
-    setCurrentPath([svgCoords]);
+    const touches = event.nativeEvent.touches;
+    
+    if (touches.length === 2) {
+      // İki parmak - pinch zoom başlat
+      setIsPinching(true);
+      setInitialDistance(getDistance(touches));
+      setInitialScale(scale);
+      return;
+    }
+    
+    if (touches.length === 1 && !isPinching) {
+      // Tek parmak - boyama başlat
+      const { locationX, locationY } = event.nativeEvent;
+      const svgCoords = convertToSVGCoords(locationX, locationY);
+      playPaintSound();
+      setIsDrawing(true);
+      setCurrentPath([svgCoords]);
+    }
   };
 
   const handleTouchMove = (event) => {
-    if (!isDrawing) return;
+    const touches = event.nativeEvent.touches;
+    
+    if (touches.length === 2 && isPinching) {
+      // Pinch zoom
+      const currentDistance = getDistance(touches);
+      const newScale = Math.max(0.5, Math.min(3, initialScale * (currentDistance / initialDistance)));
+      setScale(newScale);
+      return;
+    }
+    
+    if (!isDrawing || isPinching) return;
+    
     const { locationX, locationY } = event.nativeEvent;
     const svgCoords = convertToSVGCoords(locationX, locationY);
+    
+    // Performans için: Sadece belirli bir mesafeden sonra nokta ekle
+    // Tablet için daha büyük mesafe (daha az nokta = daha hızlı)
+    const minDistance = screenWidth >= 1024 ? 4 : 2;
     
     if (currentPath.length > 0) {
       const lastPoint = currentPath[currentPath.length - 1];
@@ -250,13 +270,18 @@ export default function AnimalPaintingScreen({ onNavigate, onSave, initialAnimal
         Math.pow(svgCoords.y - lastPoint.y, 2)
       );
       
-      if (distance < 5) return;
+      if (distance < minDistance) return;
     }
     
     setCurrentPath(prev => [...prev, svgCoords]);
   };
 
   const handleTouchEnd = () => {
+    if (isPinching) {
+      setIsPinching(false);
+      return;
+    }
+    
     stopPaintSound();
     if (currentPath.length > 1) {
       const pathString = smoothPath(currentPath);
@@ -269,20 +294,14 @@ export default function AnimalPaintingScreen({ onNavigate, onSave, initialAnimal
   const smoothPath = (points) => {
     if (points.length < 2) return '';
     
-    let path = `M${points[0].x},${points[0].y}`;
+    // Daha basit ve hızlı: Direkt çizgi çizimi (Bezier yerine)
+    const pathParts = [`M${points[0].x.toFixed(1)},${points[0].y.toFixed(1)}`];
     
-    for (let i = 1; i < points.length - 1; i++) {
-      const xc = (points[i].x + points[i + 1].x) / 2;
-      const yc = (points[i].y + points[i + 1].y) / 2;
-      path += ` Q${points[i].x},${points[i].y} ${xc},${yc}`;
+    for (let i = 1; i < points.length; i++) {
+      pathParts.push(`L${points[i].x.toFixed(1)},${points[i].y.toFixed(1)}`);
     }
     
-    if (points.length > 1) {
-      const last = points[points.length - 1];
-      path += ` L${last.x},${last.y}`;
-    }
-    
-    return path;
+    return pathParts.join(' ');
   };
 
   const currentPathString = currentPath.length > 0 
@@ -314,6 +333,7 @@ export default function AnimalPaintingScreen({ onNavigate, onSave, initialAnimal
           viewBox={`0 0 ${SVG_VIEW_WIDTH} ${SVG_VIEW_HEIGHT}`}
           preserveAspectRatio="xMidYMid meet"
         >
+          <G transform={`translate(${translateX}, ${translateY}) scale(${scale}) translate(${SVG_VIEW_WIDTH/2}, ${SVG_VIEW_HEIGHT/2}) translate(-${SVG_VIEW_WIDTH/2}, -${SVG_VIEW_HEIGHT/2})`}>
           <Defs>
             <ClipPath id="hayvanMaskesi">
               <Path d={
@@ -326,12 +346,6 @@ export default function AnimalPaintingScreen({ onNavigate, onSave, initialAnimal
                 selectedAnimal === 'fil' ? FIL_GOVDE_YOLU :
                 selectedAnimal === 'inek' ? INEK_GOVDE_YOLU :
                 selectedAnimal === 'kartal' ? KARTAL_GOVDE_YOLU :
-                selectedAnimal === 'balik' ? BALIK_GOVDE_YOLU :
-                selectedAnimal === 'ayi' ? AYI_GOVDE_YOLU :
-                selectedAnimal === 'balina' ? BALINA_GOVDE_YOLU :
-                selectedAnimal === 'tavsan' ? TAVSAN_GOVDE_YOLU :
-                selectedAnimal === 'bibalik' ? BIBALIK_GOVDE_YOLU :
-                selectedAnimal === 'yildiz' ? YILDIZ_GOVDE_YOLU :
                 selectedAnimal === 'timsah' ? TIMSAH_GOVDE_YOLU :
                 selectedAnimal === 'zürafa' ? ZÜRAFA_GOVDE_YOLU :
                 selectedAnimal === 'penguen' ? PENGUEN_GOVDE_YOLU :
@@ -373,25 +387,13 @@ export default function AnimalPaintingScreen({ onNavigate, onSave, initialAnimal
            selectedAnimal === 'fil' ? <FilSiyahCizgiler /> :
            selectedAnimal === 'inek' ? <InekSiyahCizgiler /> :
            selectedAnimal === 'kartal' ? <KartalSiyahCizgiler /> :
-           selectedAnimal === 'balik' ? <BalikSiyahCizgiler /> :
-           selectedAnimal === 'ayi' ? <AyiSiyahCizgiler /> :
-           selectedAnimal === 'balina' ? <BalinaSiyahCizgiler /> :
-           selectedAnimal === 'tavsan' ? <TavsanSiyahCizgiler /> :
-           selectedAnimal === 'bibalik' ? <BibalikSiyahCizgiler /> :
-           selectedAnimal === 'yildiz' ? <YildizSiyahCizgiler /> :
            selectedAnimal === 'timsah' ? <TimsahSiyahCizgiler /> :
            selectedAnimal === 'zürafa' ? <ZürafaSiyahCizgiler /> :
            selectedAnimal === 'penguen' ? <PenguenSiyahCizgiler /> :
            <AslanSiyahCizgiler />}
+          </G>
         </Svg>
       </View>
-
-      <TouchableOpacity 
-        style={[styles.toggleButton, isPanelOpen && styles.toggleButtonOpen]} 
-        onPress={togglePanel}
-      >
-        <Text style={styles.toggleIcon}>{isPanelOpen ? '→' : '←'}</Text>
-      </TouchableOpacity>
 
       <Animated.View 
         style={[
@@ -399,16 +401,15 @@ export default function AnimalPaintingScreen({ onNavigate, onSave, initialAnimal
           { transform: [{ translateX: panelTranslateX }] }
         ]}
       >
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={styles.selectedColorDisplay}>
-            <View style={[
-              styles.selectedColorCircle, 
-              { backgroundColor: isEraser ? '#FFFFFF' : color },
-              isEraser && styles.whiteColor
-            ]} />
-            <Text style={styles.sectionTitle}>{isEraser ? 'Silgi Modu' : 'Seçili Renk'}</Text>
-          </View>
+        {/* Panel Açma/Kapama Butonu */}
+        <TouchableOpacity 
+          style={styles.toggleButton}
+          onPress={togglePanel}
+        >
+          <Text style={styles.toggleIcon}>{isPanelOpen ? '→' : '←'}</Text>
+        </TouchableOpacity>
 
+        <ScrollView showsVerticalScrollIndicator={false}>
           <Text style={styles.sectionTitle}>Fırça Kalınlığı</Text>
           <View style={styles.brushSizeContainer}>
             <View style={styles.brushSizeHeader}>
@@ -443,7 +444,11 @@ export default function AnimalPaintingScreen({ onNavigate, onSave, initialAnimal
           </View>
 
           <Text style={styles.sectionTitle}>Renkler</Text>
-          <View style={styles.colorGrid}>
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false}
+            style={styles.colorScrollView}
+          >
             {colors.map((c) => (
               <TouchableOpacity 
                 key={c} 
@@ -460,7 +465,7 @@ export default function AnimalPaintingScreen({ onNavigate, onSave, initialAnimal
                 }} 
               />
             ))}
-          </View>
+          </ScrollView>
 
           <Text style={styles.sectionTitle}>Araçlar</Text>
           
@@ -548,10 +553,10 @@ const styles = StyleSheet.create({
   canvasArea: { 
     flex: 1,
     backgroundColor: 'white', 
-    marginLeft: screenWidth >= 1024 ? 100 : 150,
-    marginRight: screenWidth >= 1024 ? 100 : 150,
-    marginTop: screenWidth >= 1024 ? 100 : 10,
-    marginBottom: screenWidth >= 1024 ? 100 : 40,
+    marginLeft: screenWidth >= 1024 ? 140 : 150,
+    marginRight: screenWidth >= 1024 ? 140 : 150,
+    marginTop: screenWidth >= 1024 ? 50 : 10,
+    marginBottom: screenWidth >= 1024 ? 50 : 40,
     borderRadius: 20,
     elevation: 4,
     shadowColor: '#000',
@@ -561,41 +566,39 @@ const styles = StyleSheet.create({
   },
   toggleButton: {
     position: 'absolute',
-    right: 0,
+    left: -40,
     top: '50%',
-    backgroundColor: '#4CAF50',
-    width: 40,
-    height: 80,
-    borderTopLeftRadius: 20,
-    borderBottomLeftRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: 'white',
+    padding: 10,
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 10,
     elevation: 5,
-    zIndex: 5,
-  },
-  toggleButtonOpen: {
-    right: 300,
+    shadowColor: '#000',
+    shadowOffset: { width: -2, height: 0 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    zIndex: 11,
   },
   toggleIcon: {
-    fontSize: 24,
-    color: 'white',
+    fontSize: 20,
     fontWeight: 'bold',
+    color: '#333',
   },
   sidePanel: {
     position: 'absolute',
     right: 0,
     top: 0,
     bottom: 0,
-    width: 300,
+    width: 170,
     backgroundColor: 'white',
     elevation: 10,
     shadowColor: '#000',
     shadowOffset: { width: -2, height: 0 },
     shadowOpacity: 0.3,
     shadowRadius: 5,
-    paddingTop: 60,
-    paddingHorizontal: 15,
-    paddingBottom: 15,
+    paddingTop: screenWidth >= 1024 ? 20 : 2,
+    paddingHorizontal: 12,
+    paddingBottom: 20,
   },
   selectedColorDisplay: {
     alignItems: 'center',
@@ -620,19 +623,17 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 8,
   },
-  colorGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-    marginBottom: 10,
+  colorScrollView: {
+    marginBottom: 20,
   },
   colorBtn: { 
-    width: 38, 
-    height: 38, 
-    borderRadius: 19, 
+    width: 40, 
+    height: 40, 
+    borderRadius: 20, 
     borderWidth: 2,
     borderColor: '#ddd',
     elevation: 2,
+    marginRight: 8,
   },
   whiteColor: {
     borderColor: '#999',

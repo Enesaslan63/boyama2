@@ -26,10 +26,11 @@ export const AslanSiyahCizgiler = () => (
 )
 
 // ANA BİLEŞEN
-const SvgComponent = ({ icRenk = "transparent", ...props }) => (
+const SvgComponent = ({ icRenk = "transparent", width, height, ...props }) => (
   <Svg
-    width={1365.333}
-    height={1365.333}
+    // Eğer dışarıdan width/height gelirse onu kullan, gelmezse 1024 varsayılan olsun
+    width={width || 1024} 
+    height={height || 1024}
     viewBox="0 0 1024 1024"
     {...props}
   >

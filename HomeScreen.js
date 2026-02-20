@@ -2,9 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView, StatusBar, ScrollView, ImageBackground, Dimensions } from 'react-native';
 import { Audio } from 'expo-av';
 
+const { width: screenWidth } = Dimensions.get('window');
+
 export default function HomeScreen({ onNavigateToFreeDraw, onNavigateToAnimalPainting, onNavigateToMagicEraser, onNavigateToMyPictures, isSoundEnabled, onToggleSound }) {
-  const { width: screenWidth } = Dimensions.get('window');
   const [buttonSound, setButtonSound] = useState(null);
+  const { width: currentScreenWidth } = Dimensions.get('window');
+  const isTablet = currentScreenWidth >= 1024;
 
   useEffect(() => {
     const loadSound = async () => {
@@ -38,10 +41,10 @@ export default function HomeScreen({ onNavigateToFreeDraw, onNavigateToAnimalPai
     }
   };
   const categories = [
-    { id: 1, title: 'Serbest Çizim', color: ['#FF9A9E', '#FAD0C4'], icon: '✏️', badge: 'Popüler', route: 'freeDraw' },
-    { id: 3, title: 'Hayvan Boyama', color: ['#FF6B9D', '#C06C84'], icon: '🦁', badge: 'Yeni', route: 'animalPainting' },
-    { id: 6, title: 'Sihirli Silgi', color: ['#A18CD1', '#FBC2EB'], icon: '🪄', badge: 'Yeni', route: 'magicEraser' },
-    { id: 5, title: 'Resimlerim', color: ['#4FACFE', '#00F2FE'], icon: '🖼️', route: 'myPictures' },
+    { id: 1, title: 'Serbest Boyama', color: '#FF6B9D', shadowColor: '#FF1744', icon: '🎨', route: 'freeDraw' },
+    { id: 3, title: 'Hayvan Boyama', color: '#FFA726', shadowColor: '#F57C00', icon: '🦁', route: 'animalPainting' },
+    { id: 6, title: 'Sihirli Silgi', color: '#AB47BC', shadowColor: '#7B1FA2', icon: '✨', route: 'magicEraser' },
+    { id: 5, title: 'Resimlerim', color: '#42A5F5', shadowColor: '#1976D2', icon: '🖼️', route: 'myPictures' },
   ];
 
   return (
@@ -51,7 +54,7 @@ export default function HomeScreen({ onNavigateToFreeDraw, onNavigateToAnimalPai
       <ImageBackground 
         source={require('./assets/backgraound.png')} 
         style={styles.backgroundImage}
-        resizeMode={screenWidth >= 1024 ? "cover" : "stretch"}
+        resizeMode={isTablet ? "cover" : "stretch"}
       >
       
       {/* Yıldızlı arka plan */}
@@ -72,13 +75,16 @@ export default function HomeScreen({ onNavigateToFreeDraw, onNavigateToAnimalPai
       </View>
 
       <ScrollView 
-        contentContainerStyle={[styles.scrollContent, { paddingTop: screenWidth >= 1024 ? 220 : 80 }]}
+        contentContainerStyle={[styles.scrollContent, { paddingTop: isTablet ? 220 : 120 }]}
         showsVerticalScrollIndicator={false}
       >
         {/* Ses Açma/Kapatma Butonu */}
         <TouchableOpacity 
           style={styles.soundButton}
-          onPress={onToggleSound}
+          onPress={() => {
+            playButtonSound();
+            onToggleSound();
+          }}
           activeOpacity={0.7}
         >
           <Text style={styles.soundIcon}>{isSoundEnabled ? '🔊' : '🔇'}</Text>
@@ -89,7 +95,7 @@ export default function HomeScreen({ onNavigateToFreeDraw, onNavigateToAnimalPai
           {categories.map((category) => (
             <TouchableOpacity
               key={category.id}
-              style={[styles.cardWrapper, { backgroundColor: category.color[0] }]}
+              style={styles.cardWrapper}
               onPress={() => {
                 playButtonSound();
                 if (category.route === 'freeDraw') onNavigateToFreeDraw();
@@ -99,21 +105,16 @@ export default function HomeScreen({ onNavigateToFreeDraw, onNavigateToAnimalPai
               }}
               activeOpacity={0.8}
             >
-              <View style={styles.card}>
-                {category.badge && (
-                  <View style={styles.badge}>
-                    <Text style={styles.badgeText}>{category.badge}</Text>
-                  </View>
-                )}
-                <Text style={styles.cardIcon}>{category.icon}</Text>
+              <View style={[styles.card, { backgroundColor: category.color }]}>
+                <View style={styles.iconContainer}>
+                  <Text style={styles.cardIcon}>{category.icon}</Text>
+                </View>
                 <Text style={styles.cardTitle}>{category.title}</Text>
               </View>
+              <View style={[styles.cardShadow, { backgroundColor: category.shadowColor }]} />
             </TouchableOpacity>
           ))}
         </View>
-
-        {/* Footer */}
-        <Text style={styles.footer}>✨ Yaratıcılığın Keşfet ✨</Text>
       </ScrollView>
       </ImageBackground>
     </SafeAreaView>
@@ -181,70 +182,111 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    paddingHorizontal: 6,
-    gap: 8,
+    paddingHorizontal: screenWidth >= 1024 ? 40 : 20,
+    gap: screenWidth >= 1024 ? 15 : 10,
   },
   cardWrapper: {
-    width: '13%',
-    aspectRatio: 0.7,
-    marginBottom: 4,
-    borderRadius: 16,
-    overflow: 'hidden',
+    width: screenWidth >= 1024 ? '40%' : '38%',
+    maxWidth: screenWidth >= 1024 ? 180 : 110,
+    aspectRatio: 1,
+    marginBottom: 10,
+    position: 'relative',
   },
   card: {
     flex: 1,
-    padding: 2,
+    borderRadius: screenWidth >= 1024 ? 25 : 16,
+    padding: screenWidth >= 1024 ? 15 : 6,
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: screenWidth >= 1024 ? 4 : 2,
+    borderColor: 'white',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 10,
+    transform: [{ translateY: screenWidth >= 1024 ? -5 : -2 }],
+  },
+  cardShadow: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: '100%',
+    borderRadius: screenWidth >= 1024 ? 25 : 16,
+    zIndex: -1,
   },
   badge: {
     position: 'absolute',
-    top: 1,
-    right: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    paddingHorizontal: 2,
-    paddingVertical: 0.5,
-    borderRadius: 2,
+    top: screenWidth >= 1024 ? 10 : 6,
+    right: screenWidth >= 1024 ? 10 : 6,
+    backgroundColor: '#FFD700',
+    paddingHorizontal: screenWidth >= 1024 ? 10 : 6,
+    paddingVertical: screenWidth >= 1024 ? 4 : 2,
+    borderRadius: screenWidth >= 1024 ? 15 : 10,
+    borderWidth: 2,
+    borderColor: 'white',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 5,
   },
   badgeText: {
-    fontSize: 4,
+    fontSize: screenWidth >= 1024 ? 10 : 7,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#FF6B00',
+  },
+  iconContainer: {
+    width: screenWidth >= 1024 ? 60 : 35,
+    height: screenWidth >= 1024 ? 60 : 35,
+    borderRadius: screenWidth >= 1024 ? 30 : 17.5,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: screenWidth >= 1024 ? 10 : 5,
+    borderWidth: screenWidth >= 1024 ? 3 : 2,
+    borderColor: 'white',
   },
   cardIcon: {
-    fontSize: 12,
-    marginBottom: 1,
+    fontSize: screenWidth >= 1024 ? 35 : 22,
   },
   cardTitle: {
-    fontSize: 5,
+    fontSize: screenWidth >= 1024 ? 16 : 10,
     fontWeight: 'bold',
     color: 'white',
     textAlign: 'center',
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
-    textShadowOffset: { width: 0.5, height: 0.5 },
-    textShadowRadius: 1,
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowOffset: { width: 2, height: 2 },
+    textShadowRadius: 4,
   },
   footer: {
     textAlign: 'center',
-    color: 'rgba(255, 255, 255, 0.6)',
-    fontSize: 7,
-    marginTop: 8,
-    marginBottom: 8,
+    color: 'rgba(255, 255, 255, 0.8)',
+    fontSize: 18,
+    marginTop: 30,
+    marginBottom: 20,
+    fontWeight: '600',
   },
   soundButton: {
     position: 'absolute',
-    top: 50,
+    top: screenWidth >= 1024 ? 50 : 30,
     right: 25,
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    width: screenWidth >= 1024 ? 60 : 50,
+    height: screenWidth >= 1024 ? 60 : 50,
+    borderRadius: screenWidth >= 1024 ? 30 : 25,
+    backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 2,
-    borderColor: 'rgba(255, 255, 255, 0.3)',
+    borderWidth: 4,
+    borderColor: '#FFD700',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 8,
   },
   soundIcon: {
-    fontSize: 16,
+    fontSize: screenWidth >= 1024 ? 30 : 25,
   },
 });
